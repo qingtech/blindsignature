@@ -36,16 +36,24 @@ public class EllipticCurve {
 			if(p1.getY() == (p - p2.getY()) % p) return px;
 			//p1与p2不互逆
 			//System.out.println("y1="+p1.getY()+",y2="+p2.getY());
-			s = ((3*p1.getX()*p1.getX()+a)/(2*p1.getY())+p)%p;
+			s = ((3*p1.getX()*p1.getX()+a)*getReverse(2*p1.getY()))%p;
 			//s = ((3*p1.getX()*p1.getX()+a)/(2*p1.getY()))+100000*p;
 		}else{
-			s = (p2.getY()-p1.getY())/(p2.getX()-p1.getX()+p)%p;
+			s = (p2.getY()-p1.getY())*getReverse(p2.getX()-p1.getX()+p)%p;
 			//s = (p2.getY()-p1.getY())/(p2.getX()-p1.getX())+100000*p;
 		}
 		px.setE(false);
-		px.setX((s*s-p1.getX()-p2.getX()+p)%p);
-		px.setY((s*(p1.getX()-px.getX())-p1.getY()+p)%p);
+		px.setX((s*s-p1.getX()-p2.getX()+100000*p)%p);
+		px.setY((s*(p1.getX()-px.getX())-p1.getY()+100000*p)%p);
 		return px;
+	}
+	public int getReverse(int x){
+		int xx = x % p;
+		int i;
+		for(i=1;i<p;i++){
+			if(xx*i%p == 1) break;
+		}
+		return i;
 	}
 
 }
