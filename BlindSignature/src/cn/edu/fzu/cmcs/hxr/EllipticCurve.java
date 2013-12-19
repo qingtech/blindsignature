@@ -30,6 +30,7 @@ public class EllipticCurve {
 	}
 	public Point add(Point p1, Point p2){
 		Point px = new Point(true);
+		//当p1或p2为本原元时
 		if(p1.isE()) return p2;
 		if(p2.isE()) return p1;
 		int s;
