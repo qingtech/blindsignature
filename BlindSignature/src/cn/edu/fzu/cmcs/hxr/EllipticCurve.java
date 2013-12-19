@@ -7,7 +7,7 @@ public class EllipticCurve {
 	public static void main(String[] args){
 		EllipticCurve ec = new EllipticCurve();
 		Point point = new Point(5,1);
-		for(int i=1;i<20;i++){
+		for(int i=1;i<30;i++){
 			Point tp = ec.multiply(i, point);
 			System.out.println(i+"G = "+tp);
 		}
@@ -30,6 +30,8 @@ public class EllipticCurve {
 	}
 	public Point add(Point p1, Point p2){
 		Point px = new Point(true);
+		if(p1.isE()) return p2;
+		if(p2.isE()) return p1;
 		int s;
 		if(p1.getX() == p2.getX()){
 			//p1与p2互逆
