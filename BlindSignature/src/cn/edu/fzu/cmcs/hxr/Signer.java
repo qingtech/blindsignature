@@ -26,6 +26,7 @@ public class Signer {
 		q = 7;
 		ec = new EllipticCurve();
 	}
+	//产生私钥
 	public void generatePrivateKey(){
 		//S[i]=S[i-1]^q mod I
 		i = 13;
@@ -41,10 +42,59 @@ public class Signer {
 			ec.showAllPoint();
 		}
 	}
+	//盲签名
 	public void blindSignature(Point c1, Point c2){
 		//d1=(si+1)c1
 		//d2=si*c2
 		d1 = ec.multiply(si.add(BigInteger.ONE), c1);
 		d2 = ec.multiply(si, c2);
+	}
+	public BigInteger getS0() {
+		return s0;
+	}
+	public void setS0(BigInteger s0) {
+		this.s0 = s0;
+	}
+	public BigInteger getSi() {
+		return si;
+	}
+	public void setSi(BigInteger si) {
+		this.si = si;
+	}
+	public Point getRi() {
+		return ri;
+	}
+	public void setRi(Point ri) {
+		this.ri = ri;
+	}
+	public int getQ() {
+		return q;
+	}
+	public void setQ(int q) {
+		this.q = q;
+	}
+	public EllipticCurve getEc() {
+		return ec;
+	}
+	public void setEc(EllipticCurve ec) {
+		this.ec = ec;
+	}
+	public int getI() {
+		return i;
+	}
+	public void setI(int i) {
+		this.i = i;
+	}
+	public Point getD1() {
+		return d1;
+	}
+	public void setD1(Point d1) {
+		this.d1 = d1;
+	}
+	public Point getD2() {
+		return d2;
+	}
+	public void setD2(Point d2) {
+		this.d2 = d2;
 	}
 }

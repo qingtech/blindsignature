@@ -44,6 +44,7 @@ public class EllipticCurve {
 			System.out.printf("%02dG=%-7s  ",i,tp);
 			if(i%7==0) System.out.println();
 		}
+		System.out.println();
 	}
 	public Point multiply(BigInteger n, Point px){
 		Point tp = px;
@@ -96,6 +97,11 @@ public class EllipticCurve {
 		p3.setY(s.multiply(x13).add(ry1).mod(p));
 		return p3;
 	}
+	public Point getReverse(Point point){
+		if(point.isE()) return point;
+		
+		return new Point(point.getX(),getAddReverse(point.getY(),p));
+	}
 	public BigInteger getAddReverse(BigInteger x, BigInteger p){
 		return p.subtract(x.mod(p)).mod(p);
 	}
@@ -121,7 +127,10 @@ class Point{
 		}
 		return str;
 	}
-
+	public boolean same(Point point){
+		if(this.isE && point.isE) return true;
+		return this.x.equals(point.getX())&&this.y.equals(point.getY());
+	}
 	public Point (boolean isE){
 		this.setE(isE);
 	}
