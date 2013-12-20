@@ -1,86 +1,121 @@
 package cn.edu.fzu.cmcs.hxr;
 
+import java.math.BigInteger;
+
 public class EllipticCurve {
 	
-	int a,b,p,ord;
-	int xg,yg,ordg;
+	BigInteger a,b,p,ord;
+	BigInteger xg,yg,ordg;
 	public static void main(String[] args){
 		EllipticCurve ec = new EllipticCurve();
-		Point point = new Point(5,1);
+		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
 		for(int i=1;i<30;i++){
 			Point tp = ec.multiply(i, point);
 			System.out.println(i+"G = "+tp);
 		}
+		//BigInteger bi1 = new BigInteger("-3");
+		//BigInteger bi2 = new BigInteger("7");
+		//System.out.println(bi1.mod(bi2));
+		//System.out.println(bi1.modInverse(bi2));
 	}
 	public EllipticCurve(){
-		a = 2;
-		b = 2;
-		p = 17;
-		ord = 19;
-		xg = 5;
-		yg = 1;
-		ordg = 19;
+		a = new BigInteger("2");
+		b = new BigInteger("2");
+		p = new BigInteger("17");
+		ord = new BigInteger("19");
+		xg = new BigInteger("5");
+		yg = new BigInteger("1");
+		ordg = new BigInteger("19");
 	}
 	public Point multiply(int n, Point px){
 		Point tp = px;
-		for(int i=1;i<n;i++){
-			tp = add(tp,px);
+		char[] nc = Integer.toBinaryString(n).toCharArray();
+		//System.out.println(n+":"+new String(nc));
+		for(int i=1;i < nc.length;i++){
+			tp = add(tp,tp);
+			if(nc[i]=='1'){
+				tp = add(tp,px);
+			}
 		}
 		return tp;
 	}
 	public Point add(Point p1, Point p2){
-		Point px = new Point(true);
+		Point p3 = new Point(true);
 		//当p1或p2为本原元时
 		if(p1.isE()) return p2;
 		if(p2.isE()) return p1;
-		int s;
-		if(p1.getX() == p2.getX()){
+		BigInteger s;
+		BigInteger bi2 = new BigInteger("2");
+		BigInteger bi3 = new BigInteger("3");
+		if(p1.getX().equals(p2.getX())){
 			//p1与p2互逆
-			if(p1.getY() == (p - p2.getY()) % p) return px;
+			
+			if(p1.getY().equals(getAddReverse(p2.getY(), p))) return p3;
 			//p1与p2不互逆
 			//System.out.println("y1="+p1.getY()+",y2="+p2.getY());
-			s = ((3*p1.getX()*p1.getX()+a)*getReverse(2*p1.getY()))%p;
+			//s = ((3*p1.getX()*p1.getX()+a)*getReverse(2*p1.getY()))%p;
+			//s = (3*p1.getX()*p1.getX()+a)
+			s = bi3.multiply(p1.getX().pow(2)).add(a);
+			// s = s**getReverse(2*p1.getY()))%p;
+			s = s.multiply(bi2.multiply(p1.getY()).modInverse(p)).mod(p);
 			//s = ((3*p1.getX()*p1.getX()+a)/(2*p1.getY()))+100000*p;
 		}else{
-			s = (p2.getY()-p1.getY())*getReverse(p2.getX()-p1.getX()+p)%p;
-			//s = (p2.getY()-p1.getY())/(p2.getX()-p1.getX())+100000*p;
+			//System.out.println("x1="+p1.getX()+",x2="+p2.getX());
+			//System.out.println("y1="+p1.getY()+",y2="+p2.getY());
+			//s = (p2.getY()-p1.getY())*getReverse(p2.getX()-p1.getX()+p)%p;
+			s = p2.getY().add(getAddReverse(p1.getY(),p));
+			
+			BigInteger t = p2.getX().add(getAddReverse(p1.getX(),p));
+			//System.out.println(t);
+			t = t.modInverse(p);
+			s = s.multiply(t).mod(p);
 		}
-		px.setE(false);
-		px.setX((s*s-p1.getX()-p2.getX()+100000*p)%p);
-		px.setY((s*(p1.getX()-px.getX())-p1.getY()+100000*p)%p);
-		return px;
+		p3.setE(false);
+		//x3 = s*s-x1-x2 mod p
+		//ss = s*s
+		BigInteger ss = s.pow(2);
+		// x12 = -x1-x2
+		BigInteger x12 = getAddReverse(p1.getX(),p).add(getAddReverse(p2.getX(),p));
+		// x3 = ss+x12 mod p
+		p3.setX(ss.add(x12).mod(p));
+		//px.setY((s*((p1.getX()-px.getX())+p)-p1.getY())%p);
+		//y3 = s*(x1-x3)-y1 mod p
+		//x13 = x1-x3
+		BigInteger x13 = p1.getX().add(getAddReverse(p3.getX(),p));
+		//ry1 = -y1
+		BigInteger ry1 = getAddReverse(p1.getY(),p);
+		//y3 = s*x13+ry1 mod p
+		p3.setY(s.multiply(x13).add(ry1).mod(p));
+		return p3;
 	}
-	public int getReverse(int x){
-		int xx = x % p;
-		int i;
-		for(i=1;i<p;i++){
-			if(xx*i%p == 1) break;
-		}
-		return i;
+	public BigInteger getAddReverse(BigInteger x, BigInteger p){
+		return p.subtract(x.mod(p)).mod(p);
 	}
 
 }
 
 class Point{
 	private boolean isE;
-	private int x;
-	private int y;
-	public Point(int x, int y){
+	private BigInteger x;
+	private BigInteger y;
+	public Point(BigInteger x, BigInteger y){
 		this.setX(x);
 		this.setY(y);
-	}
-	public Point (boolean isE){
-		this.setE(isE);
+		this.setE(false);
 	}
 	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		String str = "O";
-		if(!this.isE){
-			str = "("+this.getX()+","+this.getY()+")";
+		if(!this.isE()){
+			str = "("+x.toString()+","+y.toString()+")";
 		}
 		return str;
+	}
+
+	public Point (boolean isE){
+		this.setE(isE);
 	}
 	public boolean isE() {
 		return isE;
@@ -88,17 +123,18 @@ class Point{
 	public void setE(boolean isE) {
 		this.isE = isE;
 	}
-	public int getX() {
+	public BigInteger getX() {
 		return x;
 	}
-	public void setX(int x) {
+	public void setX(BigInteger x) {
 		this.x = x;
 	}
-	public int getY() {
+	public BigInteger getY() {
 		return y;
 	}
-	public void setY(int y) {
+	public void setY(BigInteger y) {
 		this.y = y;
 	}
+	
 	
 }
