@@ -6,15 +6,24 @@ public class EllipticCurve {
 	
 	BigInteger a,b,p,ord;
 	BigInteger xg,yg,ordg;
+	Point g = null;
 	public static void main(String[] args){
 		EllipticCurve ec = new EllipticCurve();
 		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
 		for(int i=1;i<30;i++){
-			Point tp = ec.multiply(i, point);
+			Point tp = ec.multiply(new BigInteger(i+""), point);
 			System.out.println(i+"G = "+tp);
 		}
-		//BigInteger bi1 = new BigInteger("-3");
-		//BigInteger bi2 = new BigInteger("7");
+//		BigInteger bi1 = new BigInteger("512");
+//		BigInteger bi2 = new BigInteger("7");
+//		System.out.println("length:"+ bi1.bitLength());
+//		System.out.println("count:"+ bi1.bitCount());
+//		for(int i=bi1.bitLength()-1; i>=0;i--){
+//			if(bi1.testBit(i))
+//				System.out.print("1");
+//			else
+//				System.out.print("0");
+//		}
 		//System.out.println(bi1.mod(bi2));
 		//System.out.println(bi1.modInverse(bi2));
 	}
@@ -26,14 +35,22 @@ public class EllipticCurve {
 		xg = new BigInteger("5");
 		yg = new BigInteger("1");
 		ordg = new BigInteger("19");
+		g = new Point(xg,yg);
 	}
-	public Point multiply(int n, Point px){
+	public void showAllPoint(){
+		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
+		for(int i=1;i<21;i++){
+			Point tp = this.multiply(new BigInteger(i+""), point);
+			System.out.printf("%02dG=%-7s  ",i,tp);
+			if(i%7==0) System.out.println();
+		}
+	}
+	public Point multiply(BigInteger n, Point px){
 		Point tp = px;
-		char[] nc = Integer.toBinaryString(n).toCharArray();
 		//System.out.println(n+":"+new String(nc));
-		for(int i=1;i < nc.length;i++){
+		for(int i=n.bitLength()-2;i >= 0;i--){
 			tp = add(tp,tp);
-			if(nc[i]=='1'){
+			if(n.testBit(i)){
 				tp = add(tp,px);
 			}
 		}
@@ -52,19 +69,10 @@ public class EllipticCurve {
 			
 			if(p1.getY().equals(getAddReverse(p2.getY(), p))) return p3;
 			//p1与p2不互逆
-			//System.out.println("y1="+p1.getY()+",y2="+p2.getY());
-			//s = ((3*p1.getX()*p1.getX()+a)*getReverse(2*p1.getY()))%p;
-			//s = (3*p1.getX()*p1.getX()+a)
 			s = bi3.multiply(p1.getX().pow(2)).add(a);
-			// s = s**getReverse(2*p1.getY()))%p;
 			s = s.multiply(bi2.multiply(p1.getY()).modInverse(p)).mod(p);
-			//s = ((3*p1.getX()*p1.getX()+a)/(2*p1.getY()))+100000*p;
 		}else{
-			//System.out.println("x1="+p1.getX()+",x2="+p2.getX());
-			//System.out.println("y1="+p1.getY()+",y2="+p2.getY());
-			//s = (p2.getY()-p1.getY())*getReverse(p2.getX()-p1.getX()+p)%p;
 			s = p2.getY().add(getAddReverse(p1.getY(),p));
-			
 			BigInteger t = p2.getX().add(getAddReverse(p1.getX(),p));
 			//System.out.println(t);
 			t = t.modInverse(p);
