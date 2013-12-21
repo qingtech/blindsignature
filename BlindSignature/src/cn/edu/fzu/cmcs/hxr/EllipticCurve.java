@@ -7,6 +7,7 @@ public class EllipticCurve {
 	BigInteger a,b,p,ord;
 	BigInteger xg,yg,ordg;
 	Point g = null;
+	Point[] points = null;
 	public static void main(String[] args){
 		EllipticCurve ec = new EllipticCurve();
 		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
@@ -36,15 +37,39 @@ public class EllipticCurve {
 		yg = new BigInteger("1");
 		ordg = new BigInteger("19");
 		g = new Point(xg,yg);
-	}
-	public void showAllPoint(){
 		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
+		points = new Point[ord.intValue()];
+		points[0] = point;
+		for(int i=1;i<ord.intValue();i++){
+			points[i] = this.multiply(new BigInteger((i+1)+""), point);
+		}
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		//曲线:y=x^3+ax+b mod 17  a=2,b=2
+		//曲线阶为：19，基点G(5,1),基点的阶I：19
+		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
+		String str = "曲线:y=x^3+ax+b mod "+p+"  a="+a+", b="+b+"\n";
+		str += "曲线阶为："+ord+"，基点G("+xg+","+yg+"),基点的阶I为："+ordg+"\n";
 		for(int i=1;i<21;i++){
 			Point tp = this.multiply(new BigInteger(i+""), point);
-			System.out.printf("%02dG=%-7s  ",i,tp);
-			if(i%7==0) System.out.println();
+			str += String.format("%02dG=%-7s  ",i,tp);
+			if(i%7==0) str+="\n";
 		}
-		System.out.println();
+		return str;
+	}
+	public String showAllPoint(){
+		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
+		String str = "";
+		for(int i=1;i<21;i++){
+			Point tp = this.multiply(new BigInteger(i+""), point);
+			str += String.format("%02dG=%-7s  ",i,tp);
+			if(i%7==0) str+="\n";
+		}
+		System.out.println(str);
+		return str;
 	}
 	public Point multiply(BigInteger n, Point px){
 		Point tp = px;
