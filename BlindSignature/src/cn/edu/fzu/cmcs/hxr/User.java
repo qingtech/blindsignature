@@ -38,6 +38,8 @@ public class User {
 	}
 	//盲化消息
 	public void blindMessage(BigInteger m_hash){
+		
+		m = ec.multiply(m_hash, ec.g);
 		BigDecimal range = new BigDecimal("1023");
 		BigDecimal random = new BigDecimal(Math.random());
 		r = range.multiply(random).toBigInteger();
