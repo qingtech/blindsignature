@@ -29,7 +29,7 @@ public class Signer {
 	//产生私钥
 	public void generatePrivateKey(){
 		//S[i]=S[i-1]^q mod I
-		i = 13;
+		i = (int)(24*Math.random());
 		BigInteger I = ec.ordg;
 		si = s0;
 		for(int ii=1;ii<=i;ii++){
@@ -46,6 +46,7 @@ public class Signer {
 	public void blindSignature(Point c1, Point c2){
 		//d1=(si+1)c1
 		//d2=si*c2
+		generatePrivateKey();
 		d1 = ec.multiply(si.add(BigInteger.ONE), c1);
 		d2 = ec.multiply(si, c2);
 	}

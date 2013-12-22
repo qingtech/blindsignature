@@ -7,9 +7,10 @@ public class User {
 	private EllipticCurve ec = null;
 	private Point c1,c2;
 	private Point s;
-	BigInteger r;
-	Point m = null;
-	Signer signer;
+	private BigInteger r;
+	private Point m = null;
+	private Point mm = null;
+	private Signer signer;
 	public static void main(String[] args){
 		User user = new User();
 		user.process();
@@ -21,7 +22,7 @@ public class User {
 	}
 	public void process(){
 		//消息盲化
-		this.blindMessage();
+		this.blindMessage(new BigInteger("3"));
 		//产生私钥，盲签名
 		signer.generatePrivateKey();
 		signer.blindSignature(c1, c2);
@@ -36,7 +37,7 @@ public class User {
 		}
 	}
 	//盲化消息
-	public void blindMessage(){
+	public void blindMessage(BigInteger m_hash){
 		BigDecimal range = new BigDecimal("1023");
 		BigDecimal random = new BigDecimal(Math.random());
 		r = range.multiply(random).toBigInteger();
@@ -61,9 +62,57 @@ public class User {
 	//验证过程
 	public boolean verify(){
 		//d1*r^-1—s = m
-		Point temp = ec.add(ec.multiply(r.modInverse(ec.ordg), signer.getD1()), ec.getReverse(s));
-		if(!temp.same(m)) return false;
+		mm = ec.add(ec.multiply(r.modInverse(ec.ordg), signer.getD1()), ec.getReverse(s));
+		if(!mm.same(m)) return false;
 		return true;
+	}
+	public EllipticCurve getEc() {
+		return ec;
+	}
+	public void setEc(EllipticCurve ec) {
+		this.ec = ec;
+	}
+	public Point getC1() {
+		return c1;
+	}
+	public void setC1(Point c1) {
+		this.c1 = c1;
+	}
+	public Point getC2() {
+		return c2;
+	}
+	public void setC2(Point c2) {
+		this.c2 = c2;
+	}
+	public Point getS() {
+		return s;
+	}
+	public void setS(Point s) {
+		this.s = s;
+	}
+	public BigInteger getR() {
+		return r;
+	}
+	public void setR(BigInteger r) {
+		this.r = r;
+	}
+	public Point getM() {
+		return m;
+	}
+	public void setM(Point m) {
+		this.m = m;
+	}
+	public Point getMm() {
+		return mm;
+	}
+	public void setMm(Point mm) {
+		this.mm = mm;
+	}
+	public Signer getSigner() {
+		return signer;
+	}
+	public void setSigner(Signer signer) {
+		this.signer = signer;
 	}
 
 }

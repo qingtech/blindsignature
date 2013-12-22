@@ -146,7 +146,7 @@ class Point{
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		String str = "O";
+		String str = "(O)";
 		if(!this.isE()){
 			str = "("+x.toString()+","+y.toString()+")";
 		}
