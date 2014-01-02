@@ -1,6 +1,7 @@
 package cn.edu.fzu.cmcs.hxr;
 
 import java.math.BigInteger;
+import java.util.Vector;
 
 public class EllipticCurve {
 	
@@ -9,12 +10,12 @@ public class EllipticCurve {
 	Point g = null;
 	Point[] points = null;
 	public static void main(String[] args){
-		EllipticCurve ec = new EllipticCurve();
-		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
-		for(int i=1;i<30;i++){
-			Point tp = ec.multiply(new BigInteger(i+""), point);
-			System.out.println(i+"G = "+tp);
-		}
+//		EllipticCurve ec = new EllipticCurve();
+//		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
+//		for(int i=1;i<30;i++){
+//			Point tp = ec.multiply(new BigInteger(i+""), point);
+//			System.out.println(i+"G = "+tp);
+//		}
 //		BigInteger bi1 = new BigInteger("512");
 //		BigInteger bi2 = new BigInteger("7");
 //		System.out.println("length:"+ bi1.bitLength());
@@ -27,6 +28,7 @@ public class EllipticCurve {
 //		}
 		//System.out.println(bi1.mod(bi2));
 		//System.out.println(bi1.modInverse(bi2));
+		EllipticCurve ec = new EllipticCurve(2,2,179);
 	}
 	public EllipticCurve(){
 		a = new BigInteger("2");
@@ -44,14 +46,53 @@ public class EllipticCurve {
 			points[i] = this.multiply(new BigInteger((i+1)+""), point);
 		}
 	}
-	
+	public EllipticCurve(int a, int b, int p){
+		this.a = new BigInteger(a+"");
+		this.b = new BigInteger(b+"");
+		this.p = new BigInteger(p+"");
+		ord = new BigInteger("19");
+		xg = new BigInteger("0");
+		yg = new BigInteger("0");
+		ordg = new BigInteger("19");
+		
+		Vector<Point> v = new Vector<Point>();
+		while(xg.compareTo(this.p)<0){
+			yg = BigInteger.ZERO;
+			while(yg.compareTo(this.p)<0){
+				if(onLine(xg,yg)){
+					g = new Point(xg,yg);
+					v.add(g);
+				}
+				yg = yg.add(BigInteger.ONE);
+			}
+			xg = xg.add(BigInteger.ONE);
+		}
+		this.ord = new BigInteger(v.size()+"");
+		for(int i=0;i<v.size();i++){
+			System.out.printf("%3d:%8s  ",i,v.get(i));
+			if((i+1)%10==0) System.out.println();
+		}
+		for(int i=0;i<v.size();i++){
+			g = v.get(i);
+			Point t = multiply(ord, g);
+			//System.out.println(i+":"+g+":"+t);
+			if(t.isE()){
+				System.out.println(i+":"+g);
+			}
+		}
+	}
+	public boolean onLine(BigInteger x, BigInteger y){
+		BigInteger yy = y.multiply(y).mod(p);
+		BigInteger xx = x.pow(3).add(x.multiply(a)).add(b).mod(p);
+		return yy.equals(xx);
+	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		//曲线:y=x^3+ax+b mod 17  a=2,b=2
+		//曲线:y^2=x^3+ax+b mod 17  a=2,b=2
 		//曲线阶为：19，基点G(5,1),基点的阶I：19
 		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
-		String str = "曲线:y=x^3+ax+b mod "+p+"  a="+a+", b="+b+"\n";
+		String str = "曲线:y^2=x^3+ax+b mod "+p+"  a="+a+", b="+b+"\n";
 		str += "曲线阶为："+ord+"，基点G("+xg+","+yg+"),基点的阶I为："+ordg+"\n";
 		for(int i=1;i<21;i++){
 			Point tp = this.multiply(new BigInteger(i+""), point);
