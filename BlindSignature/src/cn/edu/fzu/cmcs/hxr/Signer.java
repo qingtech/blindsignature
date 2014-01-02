@@ -18,13 +18,13 @@ public class Signer {
 	private Point d1 = null;
 	private Point d2 = null;
 	public static void main(String[] args){
-		Signer signer = new Signer();
+		Signer signer = new Signer(new EllipticCurve());
 		signer.generatePrivateKey();
 	}
-	public Signer(){
+	public Signer(EllipticCurve ec){
 		s0 = new BigInteger("4");
 		q = 7;
-		ec = new EllipticCurve();
+		this.ec = ec;
 	}
 	//产生私钥
 	public void generatePrivateKey(){

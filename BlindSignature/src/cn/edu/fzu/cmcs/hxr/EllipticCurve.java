@@ -1,5 +1,7 @@
 package cn.edu.fzu.cmcs.hxr;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.Vector;
 
@@ -8,7 +10,7 @@ public class EllipticCurve {
 	BigInteger a,b,p,ord;
 	BigInteger xg,yg,ordg;
 	Point g = null;
-	Point[] points = null;
+	//Point[] points = null;
 	public static void main(String[] args){
 //		EllipticCurve ec = new EllipticCurve();
 //		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
@@ -28,7 +30,20 @@ public class EllipticCurve {
 //		}
 		//System.out.println(bi1.mod(bi2));
 		//System.out.println(bi1.modInverse(bi2));
-		EllipticCurve ec = new EllipticCurve(2,2,179);
+		//EllipticCurve ec = new EllipticCurve(2,2,179);
+		
+		int index;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String str;
+		try{
+			while((str = br.readLine())!=null){
+				index = Integer.parseInt(str);
+				EllipticCurve ec = new EllipticCurve(index);
+				System.out.println(ec);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	public EllipticCurve(){
 		a = new BigInteger("2");
@@ -40,11 +55,42 @@ public class EllipticCurve {
 		ordg = new BigInteger("19");
 		g = new Point(xg,yg);
 		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
-		points = new Point[ord.intValue()];
-		points[0] = point;
-		for(int i=1;i<ord.intValue();i++){
-			points[i] = this.multiply(new BigInteger((i+1)+""), point);
-		}
+//		points = new Point[ord.intValue()];
+//		points[0] = point;
+//		for(int i=1;i<ord.intValue();i++){
+//			points[i] = this.multiply(new BigInteger((i+1)+""), point);
+//		}
+	}
+	public EllipticCurve(int index){
+//		（1）10,3,577，(159,500),541
+//		（2）11,26,1009，(45,182),1019
+//		（3）29,29,5297，(5,915),5297
+//		（4）16,24,23929,(2,8),24077
+//		（5）13,26,1009,(2,64),1009
+//		（6）14,20,3889,(1,423),3907
+//		（7）2,5,577,(7,311),607
+//		（8）5,1,577,(64,63),577
+//		（9）7,10,577,(8,1),601
+		int aa[] = {10,11,29,16,13,14,2,5,7};
+		int bb[] = {3,26,29,24,26,20,5,1,10};
+		int pp[] = {577,1009,5297,23929,1009,3889,577,577,577};
+		int xxg[] = {159,45,5,2,2,1,7,64,8};
+		int yyg[] = {500,182,915,8,64,423,311,63,1};
+		int ordd[] = {541,1019,5297,24077,1009,3907,607,577,601};
+		a = new BigInteger(aa[index]+"");
+		b = new BigInteger(bb[index]+"");
+		p = new BigInteger(pp[index]+"");
+		ord = new BigInteger(ordd[index]+"");
+		xg = new BigInteger(xxg[index]+"");
+		yg = new BigInteger(yyg[index]+"");
+		ordg = new BigInteger(ordd[index]+"");
+		g = new Point(xg,yg);
+		//Point point = g;
+//		points = new Point[ord.intValue()];
+//		points[0] = point;
+//		for(int i=1;i<ord.intValue();i++){
+//			points[i] = this.multiply(new BigInteger((i+1)+""), point);
+//		}
 	}
 	public EllipticCurve(int a, int b, int p){
 		this.a = new BigInteger(a+"");
@@ -91,14 +137,14 @@ public class EllipticCurve {
 		// TODO Auto-generated method stub
 		//曲线:y^2=x^3+ax+b mod 17  a=2,b=2
 		//曲线阶为：19，基点G(5,1),基点的阶I：19
-		Point point = new Point(new BigInteger("5"),new BigInteger("1"));
+		Point point = g;
 		String str = "曲线:y^2=x^3+ax+b mod "+p+"  a="+a+", b="+b+"\n";
-		str += "曲线阶为："+ord+"，基点G("+xg+","+yg+"),基点的阶I为："+ordg+"\n";
-		for(int i=1;i<21;i++){
-			Point tp = this.multiply(new BigInteger(i+""), point);
-			str += String.format("%02dG=%-7s  ",i,tp);
-			if(i%7==0) str+="\n";
-		}
+		str += " 阶："+ord+"，基点G("+xg+","+yg+"),阶I："+ordg+"\n";
+//		for(int i=1;i<ordg.intValue()+2;i++){
+//			Point tp = this.multiply(new BigInteger(i+""), point);
+//			str += String.format("%02dG=%-7s  ",i,tp);
+//			if(i%7==0) str+="\n";
+//		}
 		return str;
 	}
 	public String showAllPoint(){

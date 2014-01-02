@@ -12,13 +12,13 @@ public class User {
 	private Point mm = null;
 	private Signer signer;
 	public static void main(String[] args){
-		User user = new User();
+		User user = new User(0);
 		user.process();
 	}
-	public User(){
-		ec = new EllipticCurve();
+	public User(int index){
+		ec = new EllipticCurve(index);
 		m = ec.multiply(new BigInteger("3"), ec.g);
-		signer = new Signer();
+		signer = new Signer(ec);
 	}
 	public void process(){
 		//消息盲化
