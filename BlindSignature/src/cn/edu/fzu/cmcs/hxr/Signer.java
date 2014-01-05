@@ -30,7 +30,7 @@ public class Signer {
 	//产生私钥
 	public void generatePrivateKey(){
 		//S[i]=S[i-1]^q mod I
-		int t = (int)(1000*Math.random());
+		int t = (int)(ec.ord.intValue()*1.0*Math.random());
 		s0 = new BigInteger(t+"");
 		i = (int)(24*Math.random());
 		BigInteger I = ec.ordg;

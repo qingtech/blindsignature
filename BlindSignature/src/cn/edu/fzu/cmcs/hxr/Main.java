@@ -188,7 +188,7 @@ public class Main extends JFrame {
 		});
 
 		message_from_comboBox.setModel(new DefaultComboBoxModel(new String[] {
-				"字符串", "文件" }));
+				"   字符串", "   文件" }));
 		panel_1.add(message_from_comboBox);
 
 		choose_message_file_button = new JButton("选择文件");
