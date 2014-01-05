@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.Color;
 
 public class Main extends JFrame {
 	EllipticCurve ec = null;
@@ -54,7 +55,7 @@ public class Main extends JFrame {
 
 	JLabel m_label;
 
-	JLabel result_label;
+	JLabel result_label__;
 
 	JButton verify_botton;
 
@@ -89,6 +90,9 @@ public class Main extends JFrame {
 	private JScrollPane scrollPane_1;
 	private JTextArea file_message_textArea;
 	private JLabel s0_label;
+	private JPanel panel_2;
+	private JLabel result_label;
+	private JLabel lblNewLabel_1;
 
 	public static void main(String[] args) {
 		new Main();
@@ -221,7 +225,7 @@ public class Main extends JFrame {
 		scrollPane_1 = new JScrollPane(file_message_textArea);
 		panel_1.add(scrollPane_1);
 
-		JLabel original_message_label = new JLabel("请输入消息：");
+		JLabel original_message_label = new JLabel(" 请输入消息：");
 		panel_1.add(original_message_label);
 
 		string_message_textArea = new JTextArea();
@@ -259,19 +263,19 @@ public class Main extends JFrame {
 		// 盲化
 		blind_panel.setLayout(new GridLayout(8, 1, 0, 0));
 
-		hash_value_label = new JLabel("消息哈希值：？");
+		hash_value_label = new JLabel(" 消息哈希值：？");
 		blind_panel.add(hash_value_label);
 
-		message_point_label = new JLabel("消息曲线点(?,?)");
+		message_point_label = new JLabel(" 消息曲线点(?,?)");
 		blind_panel.add(message_point_label);
 
-		r_label = new JLabel("随机盲因子r = ?");
+		r_label = new JLabel(" 随机盲因子r = ?");
 		blind_panel.add(r_label);
 
-		c1_label = new JLabel("C1 = rm = (?,?)");
+		c1_label = new JLabel(" C1 = rm = (?,?)");
 		blind_panel.add(c1_label);
 
-		c2_label = new JLabel("C2 = rG+m = (?,?)");
+		c2_label = new JLabel(" C2 = rG+m = (?,?)");
 		blind_panel.add(c2_label);
 
 		blind_button = new JButton("盲化");
@@ -312,19 +316,30 @@ public class Main extends JFrame {
 		m_label = new JLabel("m = (?,?)");
 		verify_panel.add(m_label);
 
-		result_label = new JLabel("签名结果：未知");
-		verify_panel.add(result_label);
-
 		verify_botton = new JButton("验证");
 		verify_botton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main.this.verify();
 			}
 		});
+		
+		panel_2 = new JPanel();
+		verify_panel.add(panel_2);
+				panel_2.setLayout(new GridLayout(1, 3, 0, 0));
+		
+				result_label__ = new JLabel("  签名结果：");
+				panel_2.add(result_label__);
+				
+				result_label = new JLabel("未知");
+				panel_2.add(result_label);
+				
+				lblNewLabel_1 = new JLabel("      ");
+				panel_2.add(lblNewLabel_1);
 		verify_panel.add(verify_botton);
 
 		// 中主panel,消息传送过程
 		JPanel center_main_panel = new JPanel();
+		center_main_panel.setBackground(new Color(255, 255, 153));
 		main_panel.add(center_main_panel);
 		center_main_panel.setLayout(new GridLayout(10, 1, 0, 0));
 
@@ -417,7 +432,7 @@ public class Main extends JFrame {
 
 		m_label.setText("m = (2,2)");
 
-		result_label.setText("签名结果：sss");
+		result_label__.setText("签名结果：sss");
 
 		verify_botton.setEnabled(true);
 
@@ -462,29 +477,30 @@ public class Main extends JFrame {
 
 		message_from_changed();
 
-		hash_value_label.setText("消息哈希值：？");
+		hash_value_label.setText("    消息哈希值：？");
 
-		message_point_label.setText("消息曲线点m(?,?)");
+		message_point_label.setText("    消息曲线点m(?,?)");
 
-		r_label.setText("随机盲因子r = ?");
+		r_label.setText("    随机盲因子r = ?");
 
-		c1_label.setText("C1 = rm = (?,?)");
+		c1_label.setText("    C1 = rm = (?,?)");
 
-		c2_label.setText("C2 = rG+m = (?,?)");
+		c2_label.setText("    C2 = rG+m = (?,?)");
 
 		blind_button.setEnabled(false);
 
 		// 解盲
 
-		s_label.setText("S = D2 - Ri*r = (?,?)");
+		s_label.setText("    S = D2 - Ri*r = (?,?)");
 
 		deblind_button.setEnabled(false);
 
-		mm_label.setText("D1*r^-1 - S = (?,?)");
+		mm_label.setText("    D1*r^-1 - S = (?,?)");
 
-		m_label.setText("m = (?,?)");
-
-		result_label.setText("签名结果：未知");
+		m_label.setText("    m = (?,?)");
+		
+		result_label.setForeground(Color.black);
+		result_label.setText("未知");
 
 		verify_botton.setEnabled(false);
 
@@ -502,17 +518,17 @@ public class Main extends JFrame {
 				.setText("<------------------------------------------");
 
 		// 签名
-		s0_label.setText("S0=?");
+		s0_label.setText("    S0=?");
 		
-		time_label.setText("时段i = ?");
+		time_label.setText("    时段i = ?");
 
-		private_key_label.setText("私钥Si = ?");
+		private_key_label.setText("    私钥Si = ?");
 
-		public_key_label.setText("公钥Ri = Si*G = (?,?)");
+		public_key_label.setText("    公钥Ri = Si*G = (?,?)");
 
-		d1_label.setText("D1 = (Si+1)C1 = (?,?)");
+		d1_label.setText("    D1 = (Si+1)C1 = (?,?)");
 
-		d2_label.setText("D2 = Si*C2 = (?,?)");
+		d2_label.setText("    D2 = Si*C2 = (?,?)");
 
 		sign_button.setEnabled(false);
 
@@ -558,20 +574,20 @@ public class Main extends JFrame {
 		}
 		if (original_message == null || original_message.equals("")) {
 			blind_button.setEnabled(false);
-			hash_value_label.setText("消息哈希值：？");
+			hash_value_label.setText("    消息哈希值：？");
 
-			message_point_label.setText("消息曲线点(?,?)");
+			message_point_label.setText("    消息曲线点(?,?)");
 			return;
 		}
 		blind_button.setEnabled(true);
 		BigInteger m_hash = new BigInteger(
 				Math.abs(original_message.hashCode()) + "");
 
-		hash_value_label.setText(String.format("消息哈希值：%s", m_hash));
+		hash_value_label.setText(String.format("    消息哈希值：%s", m_hash));
 
 		user.blindMessage(m_hash);
 
-		message_point_label.setText(String.format("消息曲线点%s", user.getM()));
+		message_point_label.setText(String.format("    消息曲线点%s", user.getM()));
 	}
 
 	public void blind() {
@@ -591,27 +607,27 @@ public class Main extends JFrame {
 //
 //		user.blindMessage(m_hash);
 
-		message_point_label.setText(String.format("消息曲线点%s", user.getM()));
+		message_point_label.setText(String.format("    消息曲线点%s", user.getM()));
 
-		r_label.setText(String.format("随机盲因子r = %s", user.getR()));
+		r_label.setText(String.format("    随机盲因子r = %s", user.getR()));
 
-		c1_label.setText(String.format("C1 = rm = %s", user.getC1()));
+		c1_label.setText(String.format("    C1 = rm = %s", user.getC1()));
 
-		c2_label.setText(String.format("C2 = rG+m = %s", user.getC2()));
+		c2_label.setText(String.format("    C2 = rG+m = %s", user.getC2()));
 
 		blind_button.setEnabled(false);
 
 		// 解盲
 
-		s_label.setText("S = D2 - Ri*r = (?,?)");
+		//s_label.setText("    S = D2 - Ri*r = (?,?)");
 
 		deblind_button.setEnabled(false);
 
-		mm_label.setText("D1*r^-1 - S = (?,?)");
+		//mm_label.setText("    D1*r^-1 - S = (?,?)");
 
-		m_label.setText("m = (?,?)");
+		//m_label.setText("    m = (?,?)");
 
-		result_label.setText("签名结果：未知");
+		//result_label.setText("未知");
 
 		verify_botton.setEnabled(false);
 
@@ -624,15 +640,15 @@ public class Main extends JFrame {
 		send3_label.setText("        D1 = (?,?), D2 = (?,?)");
 
 		// 签名
-		time_label.setText("时段i = ?");
-
-		private_key_label.setText("私钥Si = ?");
-
-		public_key_label.setText("公钥Ri = Si*G = (?,?)");
-
-		d1_label.setText("D1 = (Si+1)C1 = (?,?)");
-
-		d2_label.setText("D2 = Si*C2 = (?,?)");
+//		time_label.setText("时段i = ?");
+//
+//		private_key_label.setText("私钥Si = ?");
+//
+//		public_key_label.setText("公钥Ri = Si*G = (?,?)");
+//
+//		d1_label.setText("D1 = (Si+1)C1 = (?,?)");
+//
+//		d2_label.setText("D2 = Si*C2 = (?,?)");
 
 		// 椭圆曲线选择
 		ec_comboBox.setEnabled(false);
@@ -690,34 +706,21 @@ public class Main extends JFrame {
 		sendToUser();
 
 		// 签名
-		s0_label.setText("S0="+signer.getS0());
+		s0_label.setText("    S0="+signer.getS0());
 	
-		time_label.setText(String.format("时段i = %d", signer.getI()));
+		time_label.setText(String.format("    时段i = %d", signer.getI()));
 
-		private_key_label.setText(String.format("私钥Si = %s", signer.getSi()));
+		private_key_label.setText(String.format("    私钥Si = %s", signer.getSi()));
 
-		public_key_label.setText(String.format("公钥Ri = Si*G = %s",
+		public_key_label.setText(String.format("    公钥Ri = Si*G = %s",
 				signer.getRi()));
 
-		d1_label.setText(String.format("D1 = (Si+1)C1 = %s", signer.getD1()));
+		d1_label.setText(String.format("    D1 = (Si+1)C1 = %s", signer.getD1()));
 
-		d2_label.setText(String.format("D2 = Si*C2 = %s", signer.getD2()));
+		d2_label.setText(String.format("    D2 = Si*C2 = %s", signer.getD2()));
 
 		sign_button.setEnabled(false);
 
-		// 解盲
-
-		s_label.setText("S = D2 - Ri*r = (?,?)");
-
-		// deblind_button.setEnabled(true);
-
-		mm_label.setText("D1*r^-1 - S = (?,?)");
-
-		m_label.setText("m = (?,?)");
-
-		result_label.setText("签名结果：未知");
-
-		verify_botton.setEnabled(false);
 	}
 
 	public void sendToUser() {
@@ -768,15 +771,15 @@ public class Main extends JFrame {
 	public void deblind() {
 		// 解盲
 		user.deblind();
-		s_label.setText(String.format("S = D2 - Ri*r = %s", user.getS()));
+		s_label.setText(String.format("    S = D2 - Ri*r = %s", user.getS()));
 
 		deblind_button.setEnabled(false);
 
-		mm_label.setText("D1*r^-1 - S = (?,?)");
+		//mm_label.setText("    D1*r^-1 - S = (?,?)");
 
-		m_label.setText("m = (?,?)");
+		//m_label.setText("    m = (?,?)");
 
-		result_label.setText("签名结果：未知");
+		//result_label__.setText("    签名结果：未知");
 
 		verify_botton.setEnabled(true);
 	}
@@ -784,16 +787,42 @@ public class Main extends JFrame {
 	public void verify() {
 		// 验证
 		boolean res = user.verify();
-		mm_label.setText(String.format("D1*r^-1 - S = %s", user.getMm()));
+		mm_label.setText(String.format("    D1*r^-1 - S = %s", user.getMm()));
 
-		m_label.setText(String.format("m = %s", user.getM()));
-
+		m_label.setText(String.format("    m = %s", user.getM()));
+		result_label.setForeground(Color.red);
 		if (res) {
-			result_label.setText("签名结果：签名成功");
+			showResult();
 		} else {
-			result_label.setText("签名结果：签名失败");
+			result_label.setText("签名失败");
 		}
 
 		verify_botton.setEnabled(false);
+	}
+	public void showResult() {
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Main.this.reset_button.setEnabled(false);
+				int i = 7;
+				while (--i >= 0) {
+					if(i%2==0){
+						result_label.setText("签名成功");
+					}else{
+						result_label.setText("");
+					}
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				Main.this.reset_button.setEnabled(true);
+			}
+
+		};
+		thread.start();
 	}
 }
