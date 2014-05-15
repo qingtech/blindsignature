@@ -22,7 +22,18 @@ namespace BlindSignature
         public MainWindow()
         {
             InitializeComponent();
-            Console.WriteLine("hello");
+            this.tabcontrol_1.MouseWheel += this.tabcontrol_1_MouseWheel;
+        }
+        void tabcontrol_1_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            TabControl tc = sender as TabControl;
+            int tabpage_cnt = tc.Items.Count;
+            int new_i = (tc.SelectedIndex - Math.Sign(e.Delta)) % tabpage_cnt;
+            if (new_i < 0)
+            {
+                new_i = new_i + tabpage_cnt;
+            }
+            tc.SelectedIndex = new_i;
         }
     }
 }
