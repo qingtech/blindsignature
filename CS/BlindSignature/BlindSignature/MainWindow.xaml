@@ -19,11 +19,11 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-        <TabControl x:Name="tabcontrol_1" TabStripPlacement="Left" HorizontalAlignment="Left" Height="500" Margin="0" VerticalAlignment="Stretch" Width="700" Background="#FF2E2E2E" BorderBrush="#FF2E2E2E" Padding="5">
-        <TabItem x:Name="tab_item_message_blind" Header="消息盲化" Style="{StaticResource TabItemStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="100" Height="90" FontFamily="Adobe Arabic" IsSelected="False" Background="DarkSalmon" BorderBrush="#FF2E2E2E" Foreground="#FF00AF00" FontSize="18" FlowDirection="RightToLeft">
+        <TabControl x:Name="tabcontrol_1" BorderThickness="0,2" TabStripPlacement="Left" HorizontalAlignment="Left" Height="500" Margin="0" VerticalAlignment="Stretch" Width="700" Background="#FF2E2E2E" BorderBrush="White" Padding="5">
+        <TabItem x:Name="tab_item_message_blind" Header="消息盲化" Style="{StaticResource TabItemStyle}"  VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="100" Height="90" FontFamily="Adobe Arabic" IsSelected="False" Background="DarkSalmon" BorderBrush="#FF00AF00" Foreground="#FF00AF00" FontSize="18" FlowDirection="RightToLeft" Opacity="100">
             <Button Content="message_blind" Height="23" Name="button1" Width="75" />
         </TabItem>
-        <TabItem x:Name="tab_item_blind_signature" Header="盲  签  名" Style="{StaticResource TabItemStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" Height="90" Background="DarkSalmon" BorderBrush="Chartreuse" IsEnabled="True" Foreground="#FFAF0000" FontSize="18" Padding="0" VerticalContentAlignment="Stretch" FlowDirection="LeftToRight">
+        <TabItem x:Name="tab_item_blind_signature" BorderThickness="5" Header="盲  签  名" Style="{StaticResource TabItemStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" Height="90" Background="DarkSalmon" BorderBrush="White" IsEnabled="True" Foreground="#FFAF0000" FontSize="18" Padding="0" VerticalContentAlignment="Stretch" FlowDirection="LeftToRight">
             <Button Content="blindsignature" Height="23" Name="button2" Width="75" FontSize="12" />
         </TabItem>
         <TabItem x:Name="tab_item_deblind" Header="解      盲"  Style="{StaticResource TabItemStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" Height="90" Background="DarkSalmon" BorderBrush="Chartreuse" Foreground="#FF0000AF" FontSize="18" FlowDirection="RightToLeft">
