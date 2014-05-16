@@ -27,6 +27,17 @@
         			<GradientStop Color="Black" Offset="1"/>
         		</LinearGradientBrush>
         	</TabItem.BorderBrush>
+            <ScrollViewer Height="476" Name="scrollViewer1" Width="535"  VerticalScrollBarVisibility="Hidden"  HorizontalScrollBarVisibility="Disabled">
+                <Grid Height="1300" Name="grid1" Width="530" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="272*" />
+                        <ColumnDefinition Width="278*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="blindsignature" Name="button1" FontSize="12" Margin="-5,0,167,0" Width="100" Height="Auto" VerticalAlignment="Top" />
+                    <Button Content="dddddd" Name="button4" FontSize="12" Margin="0,0,0,261" Grid.Column="1" VerticalAlignment="Top" />
+                    <TextBox Height="1000" HorizontalAlignment="Left" Margin="39,25,0,0" Name="textBox1" VerticalAlignment="Top" Width="432" Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow" Text="/// &lt;summary&gt;我们知道在一个限定高的窗体和容器中，想要把内容显示完是有些问题的，这个时候我们就要使用类似于浏览器的那个滚动条的效果了，在wpf中也同样如此，最近就碰到了这样的问题，也纠结了很长时间，调试滚动效果的时候一直出不来，还好现在调试好了，把代码贴出来当然，习近平不是第一个喜欢在文章和讲话中引经据典的人。美国威廉斯学院亚洲研究系教授克兰(Sam Crane)指出，习近平的前任胡锦涛在十多年前提出“和谐社会”这一理念是也借用了孔子的话。不过克兰说，习近平在引经据典时更明确、更直截了当。" />
+                </Grid>
+            </ScrollViewer>
         </TabItem>
         <TabItem x:Name="tab_item_blind_signature" BorderThickness="0" Header="盲  签  名" Style="{StaticResource TabItemStyle}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="150" Height="90" BorderBrush="Black" IsEnabled="True" Foreground="#FFAF0000" FontSize="18" Padding="0" VerticalContentAlignment="Stretch"  Margin="0,54,0,-54">
         	<TabItem.Background>
