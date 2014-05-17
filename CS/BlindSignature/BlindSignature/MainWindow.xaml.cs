@@ -22,7 +22,7 @@ namespace BlindSignature
         public MainWindow()
         {
             InitializeComponent();
-            this.tabcontrol_1.MouseWheel += this.tabcontrol_1_MouseWheel;
+            //this.tabcontrol_1.MouseWheel += this.tabcontrol_1_MouseWheel;
         }
         void tabcontrol_1_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -35,5 +35,6 @@ namespace BlindSignature
             }
             tc.SelectedIndex = new_i;
         }
+
     }
 }
