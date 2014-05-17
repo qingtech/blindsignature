@@ -71,7 +71,7 @@ namespace BlindSignature_Console
             }
             return res;
         }
-        public string toString()
+        public override string ToString()
         {
             // TODO Auto-generated method stub
             //曲线:y^2=x^3+ax+b mod 17 a=2,b=2
@@ -209,7 +209,7 @@ namespace BlindSignature_Console
             this.x = point.X;
             this.y = point.Y;
         }
-        public string toString()
+        public override string ToString()
         {
             string str = "(O)";
             if (!this.e)

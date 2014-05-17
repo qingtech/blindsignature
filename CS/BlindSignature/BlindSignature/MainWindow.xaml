@@ -1,8 +1,8 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="BlindSignature.MainWindow"
-        Title="盲签名演示程序" Height="1140" Width="1400" Left="Auto" Top="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFA29090" OpacityMask="#FFCE4D4D">
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="BlindSignature.MainWindow"
+        Title="盲签名演示程序" Height="500" Width="800" Left="Auto" Top="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" OpacityMask="#FFCE4D4D">
     <Window.Resources>
         <Style x:Key="TabItemStyle">
             <Style.Triggers>
@@ -11,7 +11,7 @@
                         <Setter.Value>
                             <ControlTemplate>
                                 <Canvas x:Name="canvas" Background="#FF2E2E2E">
-                                    <TextBlock Text="{TemplateBinding HeaderedContentControl.Header}" Canvas.Left="42" Canvas.Top="33"/> </Canvas>
+                                	<TextBlock Text="{TemplateBinding HeaderedContentControl.Header}" Canvas.Left="42" Canvas.Top="33"/> </Canvas>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
@@ -19,108 +19,112 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-	<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="1200" Height="1140" Margin="0,0,-7.312,0">
-		<Label Content="消息盲化" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49.96" Width="94" FontSize="21.333" Margin="1,0,0,0" Background="#FF333333" Foreground="#FF1F57CF"/>
-		<Label Content="盲签名" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49.96" Width="94" FontSize="21.333" Margin="1,49.96,0,0" Background="#FF333333" Foreground="#FF1F57CF"/>
-		<Label Content="解盲" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49.96" Width="94" FontSize="21.333" Margin="1,99,0,0" Background="#FF333333" Foreground="#FF1F57CF"/>
-		<Label Content="验证" HorizontalAlignment="Left" VerticalAlignment="Top" Height="49.96" Width="94" FontSize="21.333" Margin="1,150,0,0" Background="#FF333333" Foreground="#FF1F57CF"/>
-		<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Height="1140" VerticalAlignment="Top" Width="600" Margin="95,0,0,-102" Background="#FF333333" >
-			<UniformGrid Columns="3" Height="1140" Width="600">
-				<UniformGrid HorizontalAlignment="Left" Height="1140" VerticalAlignment="Top" Width="200" Margin="0" Background="#FFAE2222">
-					<UniformGrid>
-						<TabControl HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="173.5" Background="#FF333333" BorderBrush="{x:Null}" Margin="0,1.5,-163.5,-44.5">
-							<TabItem Header="文件" Margin="0">
-								<Grid Background="#FF333333">
-									<TextBox HorizontalAlignment="Left" Height="26" TextWrapping="Wrap" Text="D://hello.txt" VerticalAlignment="Top" Width="163.5"/>
-								</Grid>
-							</TabItem>
-							<TabItem Header="字符串" Margin="0">
-								<Grid Background="#FF333333">
-									<TextBox HorizontalAlignment="Left" Height="68.04" TextWrapping="Wrap" Text="HeLabelllo, world!" VerticalAlignment="Top" Width="163.5"/>
-								</Grid>
-							</TabItem>
-						</TabControl>
-						<Label Content="消息哈希值：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,119.5,-76,-90.46"/>
-						<Label Content="12345678" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,119.5,-76,-90.46"/>
-						<Label Content="消息曲线点：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,143.5,-76,-114.46"/>
-						<Label Content="(12,34)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,143.5,-76,-114.46"/>
-						<Label Content="随机盲因子：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,191.5,-76,-162.46"/>
-						<Label Content="1234" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,191.5,-76,-162.46"/>
-						<Label Content="C1   =   rm  :" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,221.5,-76,-192.46"/>
-						<Label Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,221.5,-76,-192.46"/>
-						<Label Content="C2 = rG +m :" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,250.5,-76,-221.46"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,250.5,-76,-221.46"/>
-						<Button Content="盲化并发送" HorizontalAlignment="Left" VerticalAlignment="Top" Width="81" Margin="0,316.5,-71,-281.46"/>
+	<Grid HorizontalAlignment="Left" Height="500" VerticalAlignment="Top" Width="800">
+		<Grid Margin="0,0,10,0" Width="600" Height="50" VerticalAlignment="Top" HorizontalAlignment="Center" Name="header_gird" Background="#FF333333">
+			<Label Content="用户" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" Name="label_user" />
+			<Label Content="交互过程" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" Name="label_inter" FontFamily="MingLiU" FontWeight="Normal" />
+			<Label Content="签名者" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" Name="label_signer" />
+		</Grid>
+		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="800" Height="380" Margin="0,50,0,-50">
+			<Label Content="消息盲化" HorizontalAlignment="Left" Width="95" FontSize="21.333" Margin="0,50,0,280" Background="#FF333333" Foreground="White" Name="label_message_blind" Height="50" VerticalAlignment="Top" />
+			<Label Content="盲签名" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,99.303,0,0" Background="White" Foreground="White" Name="label_blind_signature" />
+			<Label Content="解盲" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,149.01,0,0" Background="White" Foreground="White" Name="label_deblind" />
+			<Label Content="验证" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,199.346,0,0" Background="White" Foreground="White" Name="label_verify" />
+			<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Height="380" VerticalAlignment="Top" Width="600" Margin="95,0,0,0" Background="#FF333333" Name="scroll_viewer_1">
+				<UniformGrid Rows="3" Height="1140" Width="600">
+					<UniformGrid Columns="3" Rows="1" HorizontalAlignment="Left" Height="380" VerticalAlignment="Top" Width="600" Margin="0" Background="#FF333333" Name="uniform_grid_message_blind">
+						<Grid Width="200" Height="380">
+							<TabControl HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="200" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,0,-10" Name="tab_control_1" SelectionChanged="tab_control_1_SelectionChanged">
+								<TabItem Header="文件" Margin="3,6,-3,-6" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Bottom">
+                                    <TextBox TextWrapping="Wrap" Text="D://hello.txt" VerticalAlignment="Top" RenderTransformOrigin="0.493,0.993" Margin="0" BorderBrush="{x:Null}"  Name="text_box_file_name" GotFocus="text_box_file_name_GotFocus" TextChanged="text_box_file_name_TextChanged" Height="Auto" />
+								</TabItem>
+								<TabItem Margin="0,6,-3,-6" Header="字符串" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" Width="50">
+									<TextBox TextWrapping="Wrap" Text="HeLabelllo, world!" BorderBrush="{x:Null}" Name="text_box_message_string" TextChanged="text_box_message_string_TextChanged" />
+								</TabItem>
+							</TabControl>
+							<Label Content="消息哈希值：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="9,151.167,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_hash_value" Content="12345678" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="91,151.167,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="消息曲线点：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="9,177.5,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_m_1" Content="(12,34)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="92,177.5,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="随机盲因子r：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="9,201.833,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_r" Content="1234" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="91,201.5,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="C1   =   rm  :" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="5,231.873,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_c1" Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="89,231.873,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="C2 = rG +m :" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="5,262.54,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_c2" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="87,262.54,0,0" Background="{x:Null}" Foreground="White"/>
+							<Button Content="盲化并发送" HorizontalAlignment="Left" VerticalAlignment="Top" Width="81" Margin="43,315.873,0,0" Name="button_blind" Background="{x:Null}" Foreground="White" Click="button_blind_Click" />
+						</Grid>
+						<Grid Width="200" Height="380" Margin="0">
+							<Label Content="C1 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="48,230,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_inter_c1" Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="80,230,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="C2 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="48,262.96,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_inter_c2" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="80,262.96,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="---------------------&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="140" Margin="32,287,0,0" Background="{x:Null}" Foreground="White"/>
+						</Grid>
+						<Grid  Width="200" Height="380">
+							<Label Content="C1 " VerticalAlignment="Top" Height="27.96" Width="27" HorizontalAlignment="Left" Margin="41,230.55,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label x:Name="label_signer_c1" Content="(34,45)" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="73,230.55,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label Content="C2 " VerticalAlignment="Top" Height="27.96" Width="27" HorizontalAlignment="Left" Margin="41,269.55,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label x:Name="label_signer_c2" Content="(45,56)" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="73,269.55,0,0" Foreground="White" Background="{x:Null}"/>
+						</Grid>
 					</UniformGrid>
-					<UniformGrid>
-						<Label Content="i = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27.75" FontSize="14.667" Margin="0,506.61,-11.083,-439.57"/>
-						<Label Content="32" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="65" Margin="0,508.57,-48.333,-441.53"/>
-						<Label Content="Ri" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,534.57,-10.333,-467.53"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,534.57,-69.333,-467.53"/>
-						<Label Content="D1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,557.57,-10.333,-490.53"/>
-						<Label Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,557.57,-69.333,-490.53"/>
-						<Label Content="D2 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,579.57,-10.333,-512.53"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,579.57,-69.333,-512.53"/>
+					<UniformGrid Columns="3" Rows="1" Height="380" VerticalAlignment="Top" Width="600" Margin="0" HorizontalAlignment="Left" Background="#FF7884BD" x:Name="uniform_grid_blind_signature">
+						<Grid>
+							<Label Content="i = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27.75" FontSize="14.667" Margin="43.607,71.45,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_i" Content="32" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="65" Margin="72.667,74.929,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="Ri" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="43.084,103.298,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_ri" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="71.748,102.889,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="D1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="41.75,131.068,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_d1" Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="72.667,131.263,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="D2 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="44.748,164.223,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_d2" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="71.748,164.223,0,0" Background="{x:Null}" Foreground="White"/>
+						</Grid>
+						<Grid Width="200" Height="380">
+							<Label Content="i = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27.75" FontSize="14.667" Margin="52.607,56.45,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label x:Name="label_inter_i" Content="32" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="65" Margin="81.667,59.929,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label Content="Ri" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="52.084,88.298,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label x:Name="label_inter_ri" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="80.748,87.889,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label Content="D1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="50.75,116.068,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label x:Name="label_inter_d1" Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="81.667,116.263,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label Content="D2 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="53.748,149.223,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label x:Name="label_inter_d2" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="80.748,149.223,0,0" Foreground="White" Background="{x:Null}"/>
+							<Label Content="&lt;---------------------" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="140" Margin="30,179.798,0,0" Foreground="White" Background="{x:Null}"/>
+						</Grid>
+						<Grid Width="200" Height="380" Margin="0">
+							<Label Content="S0 = " VerticalAlignment="Top" Height="27.96" Width="38.333" HorizontalAlignment="Left" Margin="28,42,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_signer_s0" Content="45" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="67,43.667,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="i =" VerticalAlignment="Top" Height="27.96" Width="28.754" FontSize="14.667" HorizontalAlignment="Left" Margin="32,71.96,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_signer_i" Content="32" VerticalAlignment="Top" Height="27.96" Width="77.996" HorizontalAlignment="Left" Margin="66.004,73.627,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="Si = " VerticalAlignment="Top" Height="27.96" Width="32.089" HorizontalAlignment="Left" Margin="30,104.921,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_signer_si" Content="123" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="65,104.587,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="Ri = Si*G = " VerticalAlignment="Top" Height="27.96" Width="80" HorizontalAlignment="Left" Margin="31,134.5,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_signer_ri" Content="(45,56)" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="104,134.5,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="D1 = (Si+1)C1 = " VerticalAlignment="Top" Height="27.96" Width="121" HorizontalAlignment="Left" Margin="31,164.333,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_signer_d1" Content="(34,45)" VerticalAlignment="Top" Height="27.96" Width="51.996" HorizontalAlignment="Left" Margin="128.004,164.654,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="D2= Si*C2 = " VerticalAlignment="Top" Height="27.96" Width="81" HorizontalAlignment="Left" Margin="32,192.293,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_signer_d2" Content="(45,56)" VerticalAlignment="Top" Height="27.96" Width="55.813" HorizontalAlignment="Left" Margin="113,192.293,0,0" Background="{x:Null}" Foreground="White"/>
+							<Button x:Name="button_blind_signature" Content="盲签名" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="55,245,0,0" Background="{x:Null}" Foreground="White" Click="button_blind_signature_Click" />
+						</Grid>
 					</UniformGrid>
-					<UniformGrid>
-						<Label Content="S = D2 - Ri*r = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="121.75" Margin="0,802.062,-96.75,-687.522"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="58.334" Margin="0,802.062,-33.334,-687.522"/>
-						<Label Content="D1*r^-1 - S =" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="88.75" Margin="0,926.07,-63.75,-811.53"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="61.672" Margin="0,926.07,-36.672,-811.53"/>
-						<Label Content="m = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="47.75" FontSize="13.333" Margin="0,952.07,-22.75,-837.53"/>
-						<Label Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="59" Margin="0,953.07,-34,-838.53"/>
-						<Label Content="签名结果：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,991.07,-61,-876.53"/>
-						<Button Content="解盲" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="0,852.196,-50,-731.656"/>
-						<Button Content="验证" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="0,1052.08,-50,-931.54"/>
-						<Label Content="未知" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="47.75" Margin="0,992.07,-22.75,-877.53"/>
+					<UniformGrid Columns="3" Rows="1" HorizontalAlignment="Left" Height="380" VerticalAlignment="Top" Width="600" Margin="0" Background="#FF779CC5" x:Name="uniform_grid_deblind_verify">
+						<Grid Width="200" Height="380">
+							<Label Content="S = D2 - Ri*r = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="121.75" Margin="24,58.062,0,0" Background="{x:Null}" Foreground="White"/>
+							<Button x:Name="button_deblind" Content="解盲" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="62.25,122.07,0,0" Background="{x:Null}" Foreground="White" Click="button_deblind_Click" />
+							<Label x:Name="label_user_s" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="58.334" Margin="119.333,58.062,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="D1*r^-1 - S =" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="88.75" Margin="26.583,195.022,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_mm" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="61.672" Margin="115.333,195.022,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="m = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="47.75" FontSize="13.333" Margin="71.583,222.982,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label x:Name="label_user_m_2" Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="59" Margin="115.333,222.982,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="签名结果：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="50.333,250.942,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="未知" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="47.75" Margin="119.333,250.942,0,0" Background="{x:Null}" Foreground="White"/>
+							<Button x:Name="button_verify" Content="验证" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="62.25,293.03,0,0" Background="{x:Null}" Foreground="White" Click="button_verify_Click" />
+						</Grid>
+						<Grid Height="380"  Width="200" />
+						<Grid Height="380"  Width="200" />
 					</UniformGrid>
 				</UniformGrid>
-				<UniformGrid Height="1140" VerticalAlignment="Top" Width="200" Margin="0" HorizontalAlignment="Left" Background="#FF3160C5">
-					<UniformGrid>
-						<Label Content="C1 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,144.55,-10.333,-77.51"/>
-						<Label Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,144.55,-69.333,-77.51"/>
-						<Label Content="C2 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,173.55,-10.333,-106.51"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,173.55,-69.333,-106.51"/>
-						<Label Content="---------------------&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="140" Margin="0,203.55,-123.333,-136.51"/>
-					</UniformGrid>
-					<UniformGrid>
-						<Label Content="i = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27.75" FontSize="14.667" Margin="0,500.56,0,-338.52"/>
-						<Label Content="32" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="65" Margin="0,502.52,-31.667,-340.48"/>
-						<Label Content="Ri" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,528.52,0,-366.48"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,528.52,-52.667,-366.48"/>
-						<Label Content="D1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,551.52,0,-389.48"/>
-						<Label Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,551.52,-52.667,-389.48"/>
-						<Label Content="D2 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="0,573.52,0,-411.48"/>
-						<Label Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="0,573.52,-52.667,-411.48"/>
-						<Label Content="&lt;---------------------" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="140" Margin="0,596.52,-106.667,-434.48"/>
-					</UniformGrid>
-					<UniformGrid/>
-				</UniformGrid>
-				<UniformGrid HorizontalAlignment="Left" Height="1140" VerticalAlignment="Top" Width="200" Margin="0" Background="#FF46991F">
-					<UniformGrid>
-						<Label Content="C1 " VerticalAlignment="Top" Height="27.96" Width="27" HorizontalAlignment="Left" Margin="0,151.55,-2,-37.01"/>
-						<Label Content="(34,45)" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="0,151.55,-61,-37.01"/>
-						<Label Content="C2 " VerticalAlignment="Top" Height="27.96" Width="27" HorizontalAlignment="Left" Margin="0,180.55,-2,-66.01"/>
-						<Label Content="(45,56)" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="0,180.55,-61,-66.01"/>
-					</UniformGrid>
-					<UniformGrid>
-						<Label Content="S0 = " VerticalAlignment="Top" Height="27.96" Width="38.333" HorizontalAlignment="Left" Margin="0,482.61,-13.333,-368.07"/>
-						<Label Content="45" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="0,482.61,-61,-368.07"/>
-						<Label Content="i =" VerticalAlignment="Top" Height="27.96" Width="28.754" FontSize="14.667" HorizontalAlignment="Left" Margin="0,508.569,-3.754,-394.029"/>
-						<Label Content="32" VerticalAlignment="Top" Height="27.96" Width="77.996" HorizontalAlignment="Left" Margin="0,511.61,-52.996,-397.07"/>
-						<Label Content="Si = " VerticalAlignment="Top" Height="27.96" Width="32.089" HorizontalAlignment="Left" Margin="0,541.11,-7.089,-426.57"/>
-						<Label Content="123" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="0,541.11,-61,-426.57"/>
-						<Label Content="Ri = Si*G" VerticalAlignment="Top" Height="27.96" Width="27" HorizontalAlignment="Left" Margin="0,570.11,-2,-455.57"/>
-						<Label Content="(45,56)" VerticalAlignment="Top" Height="27.96" Width="86" HorizontalAlignment="Left" Margin="0,570.11,-61,-455.57"/>
-						<Label Content="D1 = (Si+1)C1 = " VerticalAlignment="Top" Height="27.96" Width="97" HorizontalAlignment="Left" Margin="0,605.61,-72,-491.07"/>
-						<Label Content="(34,45)" VerticalAlignment="Top" Height="27.96" Width="45.211" HorizontalAlignment="Left" Margin="0,605.61,-20.211,-491.07"/>
-						<Label Content="D2= Si*C2 = " VerticalAlignment="Top" Height="27.96" Width="81" HorizontalAlignment="Left" Margin="0,634.61,-56,-520.07"/>
-						<Label Content="(45,56)" VerticalAlignment="Top" Height="27.96" Width="46.813" HorizontalAlignment="Left" Margin="0,634.61,-21.813,-520.07"/>
-					</UniformGrid>
-					<UniformGrid/>
-				</UniformGrid>
-			</UniformGrid>
-		</ScrollViewer>
+			</ScrollViewer>
+		</Grid>
 	</Grid>
 </Window>
     

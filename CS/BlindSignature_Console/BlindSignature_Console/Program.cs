@@ -11,8 +11,8 @@ namespace BlindSignature_Console
         {
             Point p1 = new Point(1, 2);
             Point p2 = new Point();
-            Console.WriteLine("p1=" + p1.toString());
-            Console.WriteLine("p2=" + p2.toString());
+            Console.WriteLine("p1=" + p1);
+            Console.WriteLine("p2=" + p2);
             Console.WriteLine("p1.E = " + p1.E);
             Console.WriteLine("p2.E = " + p2.E);
             Console.WriteLine("8=" + Program.getBitString(8));
@@ -40,7 +40,7 @@ namespace BlindSignature_Console
             {
                 int index = Int32.Parse(str);
                 EllipticCurve ec = new EllipticCurve(index);
-                Console.WriteLine(ec.toString());
+                Console.WriteLine(ec);
             }
             while (true) ;
         }
