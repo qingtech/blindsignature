@@ -67,6 +67,7 @@ namespace BlindSignature
             DialogResult result = openFileDialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.Cancel)
             {
+                this.text_box_file_name.Text = "";
                 this.scroll_viewer_1.Focus();
                 return;
             }
@@ -77,9 +78,9 @@ namespace BlindSignature
         }
         private void text_box_file_name_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (this.button_blind == null) return;
+            if (this.button_blind == null) { this.init(); return; }
             string file_name = this.text_box_file_name.Text;
-            if (!File.Exists(file_name)) return;
+            if (!File.Exists(file_name)) { this.init(); return; }
             string file_hash = FileMD5.HashFile(file_name, "MD5");
             //this.label_inter.Content = file_hash;
             hash_value = file_hash.GetHashCode();
@@ -95,6 +96,7 @@ namespace BlindSignature
                 return;
             }
             hash_value = str.GetHashCode();
+            
             this.ready_to_blind_message();
         }
 
@@ -103,9 +105,9 @@ namespace BlindSignature
             //this.label_inter.Content = this.tab_control_1.SelectedIndex + "";
             if (this.tab_control_1.SelectedIndex == 0) //文件
             {
-                if (this.button_blind == null) return;
+                if (this.button_blind == null) { this.init(); return; }
                 string file_name = this.text_box_file_name.Text;
-                if (!File.Exists(file_name)) return;
+                if (!File.Exists(file_name)) { this.init(); return; }
                 string file_hash = FileMD5.HashFile(file_name, "MD5");
                 //this.label_inter.Content = file_hash;
                 hash_value = file_hash.GetHashCode();
@@ -147,7 +149,11 @@ namespace BlindSignature
                 this.scroll_viewer_position = 0;
             }
             if (offset == -1) return;
-
+            this.scroll_viewer_offset_change(offset);
+            
+        }
+        private void scroll_viewer_offset_change(int offset)
+        {
             this.label_message_blind.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             this.label_blind_signature.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             this.label_deblind.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
@@ -155,8 +161,8 @@ namespace BlindSignature
             switch (offset)
             {
                 case 0:
-                    this.label_message_blind.Background = new SolidColorBrush(Color.FromArgb(255,51, 51, 51));
-                    this.header_gird.Background = new SolidColorBrush(Color.FromArgb(255,51, 51, 51));
+                    this.label_message_blind.Background = new SolidColorBrush(Color.FromArgb(255, 51, 51, 51));
+                    this.header_gird.Background = new SolidColorBrush(Color.FromArgb(255, 51, 51, 51));
                     break;
                 case 1:
                     this.label_blind_signature.Background = new SolidColorBrush(Color.FromArgb(255, 120, 132, 189));
@@ -171,7 +177,6 @@ namespace BlindSignature
                     break;
             }
         }
-
         private void button_blind_Click(object sender, RoutedEventArgs e)
         {
             this.ready_to_blind_signature();
@@ -189,6 +194,8 @@ namespace BlindSignature
 
         private void button_verify_Click(object sender, RoutedEventArgs e)
         {
+            this.label_user_mm.Content = user.MM;
+            this.label_user_m_2.Content = user.M;
             this.button_verify.IsEnabled = false;
         }
 
@@ -196,6 +203,7 @@ namespace BlindSignature
         {
             //user
             //message blind
+            if (this.label_user_hash_value == null) return;
             this.label_user_hash_value.Content = "?";
             this.label_user_m_1.Content = "(?,?)";
             this.label_user_r.Content = "?";
@@ -245,8 +253,9 @@ namespace BlindSignature
         public void ready_to_blind_message()
         {
             //
-
-            hash_value = 1334; // file_hash_value;
+            if (hash_value < 0) hash_value = 0 - hash_value;
+            user.process(hash_value);
+           
             //user
             //message blind
             if (this.label_user_hash_value == null) return;
@@ -297,10 +306,11 @@ namespace BlindSignature
         {
             //message blind
             this.label_user_hash_value.Content = hash_value + "";
-            this.label_user_m_1.Content = "(?,?)";
-            this.label_user_r.Content = "?";
-            this.label_user_c1.Content = "(?,?)";
-            this.label_user_c2.Content = "(?,?)";
+            this.label_user_m_1.Content = user.M;
+            this.label_user_r.Content = user.R;
+            this.label_user_c1.Content = user.C1;
+            this.label_user_c2.Content = user.C2;
+           
 			//this.button_blind.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
             this.button_blind.IsEnabled = false;
 			
@@ -318,8 +328,8 @@ namespace BlindSignature
 
             //inter
             //message blind
-            this.label_inter_c1.Content = "(?,?)";
-            this.label_inter_c2.Content = "(?,?)";
+            this.label_inter_c1.Content = user.C1;
+            this.label_inter_c2.Content = user.C2;
             //blind signature
             this.label_inter_i.Content = "?";
             this.label_inter_ri.Content = "(?,?)";
@@ -329,8 +339,8 @@ namespace BlindSignature
 
             //signer
             //message blind
-            this.label_signer_c1.Content = "(?,?)";
-            this.label_signer_c2.Content = "(?,?)";
+           this.label_signer_c1.Content = user.C1;
+           this.label_signer_c2.Content = user.C2;
             //blind signature
             this.label_signer_s0.Content = "?";
             this.label_signer_i.Content = "?";
@@ -339,51 +349,58 @@ namespace BlindSignature
             this.label_signer_d1.Content = "(?,?)";
             this.label_signer_d2.Content = "(?,?)";
             this.button_blind_signature.IsEnabled = true;
+            this.scroll_viewer_1.ScrollToVerticalOffset(1*380);
+            this.scroll_viewer_offset_change(1);
+            this.button_blind_signature.Focus();
             //deblind & verify
         }
         public void ready_to_deblind()
         {
+            //user
             //message blind
             this.label_user_hash_value.Content = hash_value + "";
-            this.label_user_m_1.Content = "(?,?)";
-            this.label_user_r.Content = "?";
-            this.label_user_c1.Content = "(?,?)";
-            this.label_user_c2.Content = "(?,?)";
+            this.label_user_m_1.Content = user.M;
+            this.label_user_r.Content = user.R;
+            this.label_user_c1.Content = user.C1;
+            this.label_user_c2.Content = user.C2;
             this.button_blind.IsEnabled = false;
             //blind signature
-            this.label_user_i.Content = "?";
-            this.label_user_ri.Content = "(?,?)";
-            this.label_user_d1.Content = "(?,?)";
-            this.label_user_d2.Content = "(?,?)";
+            this.label_user_i.Content = signer.I;
+            this.label_user_ri.Content = signer.RI;
+            this.label_user_d1.Content = signer.D1;
+            this.label_user_d2.Content = signer.D2;
             //deblind & verify
             this.label_user_s.Content = "(?,?)";
             this.label_user_mm.Content = "(?,?)";
             this.label_user_m_2.Content = "(?,?)";
             this.button_deblind.IsEnabled = true;
+            this.scroll_viewer_1.ScrollToVerticalOffset(2 * 380);
+            this.scroll_viewer_offset_change(2);
+            this.button_deblind.Focus();
             this.button_verify.IsEnabled = false;
 
             //inter
             //message blind
-            this.label_inter_c1.Content = "(?,?)";
-            this.label_inter_c2.Content = "(?,?)";
+            this.label_inter_c1.Content = user.C1;
+            this.label_inter_c2.Content = user.C2;
             //blind signature
-            this.label_inter_i.Content = "?";
-            this.label_inter_ri.Content = "(?,?)";
-            this.label_inter_d1.Content = "(?,?)";
-            this.label_inter_d2.Content = "(?,?)";
+            this.label_inter_i.Content = signer.RI;
+            this.label_inter_ri.Content = signer.RI;
+            this.label_inter_d1.Content = signer.D1;
+            this.label_inter_d2.Content = signer.D2;
             //deblind & verify
 
             //signer
             //message blind
-            this.label_signer_c1.Content = "(?,?)";
-            this.label_signer_c2.Content = "(?,?)";
+            this.label_signer_c1.Content = user.C1;
+            this.label_signer_c2.Content = user.C2;
             //blind signature
-            this.label_signer_s0.Content = "?";
-            this.label_signer_i.Content = "?";
-            this.label_signer_si.Content = "?";
-            this.label_signer_ri.Content = "(?,?)";
-            this.label_signer_d1.Content = "(?,?)";
-            this.label_signer_d2.Content = "(?,?)";
+            this.label_signer_s0.Content = signer.S0;
+            this.label_signer_i.Content = signer.I;
+            this.label_signer_si.Content = signer.SI;
+            this.label_signer_ri.Content = signer.RI;
+            this.label_signer_d1.Content = signer.D1;
+            this.label_signer_d2.Content = signer.D2;
             this.button_blind_signature.IsEnabled = false;
             //deblind & verify
         }
@@ -391,45 +408,46 @@ namespace BlindSignature
         {
             //message blind
             this.label_user_hash_value.Content = hash_value + "";
-            this.label_user_m_1.Content = "(?,?)";
-            this.label_user_r.Content = "?";
-            this.label_user_c1.Content = "(?,?)";
-            this.label_user_c2.Content = "(?,?)";
+            this.label_user_m_1.Content = user.M;
+            this.label_user_r.Content = user.R;
+            this.label_user_c1.Content = user.C1;
+            this.label_user_c2.Content = user.C2;
             this.button_blind.IsEnabled = false;
             //blind signature
-            this.label_user_i.Content = "?";
-            this.label_user_ri.Content = "(?,?)";
-            this.label_user_d1.Content = "(?,?)";
-            this.label_user_d2.Content = "(?,?)";
+            this.label_user_i.Content = signer.I;
+            this.label_user_ri.Content = signer.RI;
+            this.label_user_d1.Content = signer.D1;
+            this.label_user_d2.Content = signer.D2;
             //deblind & verify
-            this.label_user_s.Content = "(?,?)";
+            this.label_user_s.Content = user.S;
             this.label_user_mm.Content = "(?,?)";
             this.label_user_m_2.Content = "(?,?)";
             this.button_deblind.IsEnabled = false;
             this.button_verify.IsEnabled = true;
+            this.button_verify.Focus();
 
             //inter
             //message blind
-            this.label_inter_c1.Content = "(?,?)";
-            this.label_inter_c2.Content = "(?,?)";
+            this.label_inter_c1.Content = user.C1;
+            this.label_inter_c2.Content = user.C2;
             //blind signature
-            this.label_inter_i.Content = "?";
-            this.label_inter_ri.Content = "(?,?)";
-            this.label_inter_d1.Content = "(?,?)";
-            this.label_inter_d2.Content = "(?,?)";
+            this.label_inter_i.Content = signer.RI;
+            this.label_inter_ri.Content = signer.RI;
+            this.label_inter_d1.Content = signer.D1;
+            this.label_inter_d2.Content = signer.D2;
             //deblind & verify
 
             //signer
             //message blind
-            this.label_signer_c1.Content = "(?,?)";
-            this.label_signer_c2.Content = "(?,?)";
+            this.label_signer_c1.Content = user.C1;
+            this.label_signer_c2.Content = user.C2;
             //blind signature
-            this.label_signer_s0.Content = "?";
-            this.label_signer_i.Content = "?";
-            this.label_signer_si.Content = "?";
-            this.label_signer_ri.Content = "(?,?)";
-            this.label_signer_d1.Content = "(?,?)";
-            this.label_signer_d2.Content = "(?,?)";
+            this.label_signer_s0.Content = signer.S0;
+            this.label_signer_i.Content = signer.I;
+            this.label_signer_si.Content = signer.SI;
+            this.label_signer_ri.Content = signer.RI;
+            this.label_signer_d1.Content = signer.D1;
+            this.label_signer_d2.Content = signer.D2;
             this.button_blind_signature.IsEnabled = false;
             //deblind & verify
         }
@@ -471,5 +489,12 @@ namespace BlindSignature
 			
 			this.init();
 		}
+
+		private void button_exit_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			// 在此处添加事件处理程序实现。
+			this.Close();
+		}
+
     }
 }
