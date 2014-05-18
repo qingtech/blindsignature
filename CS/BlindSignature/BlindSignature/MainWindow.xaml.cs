@@ -26,15 +26,30 @@ namespace BlindSignature
         User user;
         Signer signer;
         EllipticCurve ec;
+		EllipticCurve[] ecs;
+		System.Windows.Controls.Label[] label_ecs;
         //
         double scroll_viewer_position = 0;
+		int label_ecs_index = 0;
         public MainWindow()
         {
+            ecs = new EllipticCurve[9];
+            for (int i = 0; i < 9; i++)
+            {
+                ecs[i] = new EllipticCurve(i);
+            }
             user = new User(0);
             ec = user.EC;
             signer = user.SIGNER;
             message = ec.multiply(this.hash_value, ec.G);
             InitializeComponent();
+			label_ecs = new System.Windows.Controls.Label[9];
+			
+			for(int i=0;i<9;i++)
+			{
+				label_ecs[i] = FindName("label_ecs_"+i) as System.Windows.Controls.Label;
+				label_ecs[i].Content = ecs[i];
+			}
             this.init();
             this.scroll_viewer_1.PreviewMouseWheel += this.scroll_viewer_1_PreviewMouseWheel;
         }
@@ -223,7 +238,9 @@ namespace BlindSignature
             this.label_signer_d2.Content = "(?,?)";
             this.button_blind_signature.IsEnabled = false;
             //deblind & verify
-
+			
+			//
+			this.scroll_viewer_1.ScrollToVerticalOffset(0);
         }
         public void ready_to_blind_message()
         {
@@ -284,7 +301,9 @@ namespace BlindSignature
             this.label_user_r.Content = "?";
             this.label_user_c1.Content = "(?,?)";
             this.label_user_c2.Content = "(?,?)";
+			//this.button_blind.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
             this.button_blind.IsEnabled = false;
+			
             //blind signature
             this.label_user_i.Content = "?";
             this.label_user_ri.Content = "(?,?)";
@@ -414,8 +433,43 @@ namespace BlindSignature
             this.button_blind_signature.IsEnabled = false;
             //deblind & verify
         }
+		
+        private void label_ecs_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+        	// TODO: Add event handler implementation here.
+			System.Windows.Controls.Label label = sender as System.Windows.Controls.Label;
+			for(int i=0;i < this.label_ecs.Length; i++)
+			{
+				if(this.label_ecs[i] == label)
+				{
+					this.label_ecs_change(i);
+					return;
+				}
+			}
+        }
 
-       
-
+        private void label_ecs_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+        	// TODO: Add event handler implementation here.
+			int index = this.label_ecs_index;
+			index -= Math.Sign(e.Delta);
+			index += this.label_ecs.Length;
+			index %= this.label_ecs.Length;
+			this.label_ecs_change(index);
+        }
+		private void label_ecs_change(int index)
+		{
+			if(index == this.label_ecs_index) return;
+			this.label_ecs_index = index;
+			for(int i=0;i < this.label_ecs.Length; i++)
+			{
+				label_ecs[i].Foreground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+				label_ecs[i].Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+			}
+			label_ecs[index].Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+			label_ecs[index].Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+			
+			this.init();
+		}
     }
 }

@@ -38,6 +38,7 @@ namespace BlindSignature
             {
                 index = 0;
             }
+            //9
             int[] aa = {10,11,29,16,13,14,2,5,7};
             int[] bb = {3,26,29,24,26,20,5,1,10};
             int[] pp = {577,1009,5297,23929,1009,3889,577,577,577};
@@ -78,6 +79,7 @@ namespace BlindSignature
             //曲线阶为：19，基点G(5,1),基点的阶I：19
             String str = "曲线:y^2=x^3+ax+b mod " + p + " a=" + a + ", b=" + b + "\n";
             str += " 阶：" + ord + "，基点G(" + xg + "," + yg + "),阶I：" + ordg + "\n";
+            str = String.Format("y^2=x^3+{0}x+{1} mod {2}, G{3},阶:{4}",a,b,p,g,ordg);
             // for(int i=1;i<ordg.intValue()+2;i++){
             // Point tp = this.multiply(new BigInteger(i+""), point);
             // str += String.format("%02dG=%-7s ",i,tp);
