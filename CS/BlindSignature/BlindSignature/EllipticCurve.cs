@@ -102,7 +102,7 @@ namespace BlindSignature
             char[] bit_n = this.getBitCharArray(n);
             for (int i = 1; i < bit_n.Length; i++)
             {
-                npoint = add(npoint, npoint);
+                npoint = this.add(npoint, npoint);
                 if (bit_n[i] == '1')
                 {
                     npoint = add(npoint, point);
@@ -128,16 +128,16 @@ namespace BlindSignature
                 //s = 3*x1^2 + a
                 s = 3 * this.pow(p1.X , 2) + this.a;
                 //s = s/(2*y1) % p
-                s = s * this.getMulInverse(2 * p1.Y) % p;
+                s = s * this.getMulInverse(2 * p1.Y,this.p) % p;
             }
             else
             {
                 //s = y2 - y1
                 s = p2.Y + this.getAddInverse(p1.Y);
                 // t = 1/(x2 - x1)
-                long t = this.getMulInverse(p2.X - this.getAddInverse(p1.X));
+                long t = this.getMulInverse(p2.X + this.getAddInverse(p1.X),this.p);
                 //s = s/(x2-x1) mod p = (y2 - y1)/(x2-x1) mod p
-                s = (s * this.getMulInverse(t)) % p;
+                s = (s*t) % p;
             }
             p3.E = false;
             //x3 = s*s - x1 - x2 mod p
@@ -155,9 +155,9 @@ namespace BlindSignature
         {
             return (this.p - r % this.p) % this.p; //当r = p 或 r = 0时
         }
-        public long getMulInverse(long a)
+        public long getMulInverse(long a, long n)
         {
-            long i = this.p, v = 0, d = 1;
+            long i = n, v = 0, d = 1;
             while (a > 0)
             {
                 long t = i / a, x = a;

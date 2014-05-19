@@ -194,7 +194,15 @@ namespace BlindSignature
 
         private void button_verify_Click(object sender, RoutedEventArgs e)
         {
+    
+            Point rd = ec.multiply(ec.getMulInverse(user.R,ec.ORDG), signer.D1);
+            Point ss = user.EC.getInverse(user.S);
+            Point mm = ec.add(rd,ss);
+            this.label_user.Content = "rd:" + rd;
+            this.label_inter.Content = "-S = " + ss;
+            this.label_signer.Content = "mm = " + mm;
             this.label_user_mm.Content = user.MM;
+            //this.label_user_mm.Content = mm;
             this.label_user_m_2.Content = user.M;
             this.button_verify.IsEnabled = false;
         }
@@ -254,6 +262,7 @@ namespace BlindSignature
         {
             //
             if (hash_value < 0) hash_value = 0 - hash_value;
+            hash_value = 100;
             user.process(hash_value);
            
             //user

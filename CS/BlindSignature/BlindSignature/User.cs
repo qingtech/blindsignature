@@ -51,6 +51,9 @@ namespace BlindSignature
             int range = 1023;
             Random random = new Random();
             r = random.Next(range);
+            //*************
+            r = 100;
+            //*************
             //c1 = rm
             //c2 = rg+m
             c1 = ec.multiply(r, m);
@@ -66,7 +69,7 @@ namespace BlindSignature
         public bool verify()
         {
             // d1*r^-1 - s = m
-            mm = ec.add(ec.multiply(ec.getMulInverse(r), signer.D1), ec.getInverse(s));
+            mm = ec.add(ec.multiply(ec.getMulInverse(r,ec.ORDG), signer.D1), ec.getInverse(s));
             return mm.same(m);
         }
     }
