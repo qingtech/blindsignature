@@ -51,9 +51,9 @@ namespace BlindSignature
             int range = 1023;
             Random random = new Random();
             r = random.Next(range);
-            //*************
+            /*************
             r = 100;
-            //*************
+            //*************/
             //c1 = rm
             //c2 = rg+m
             c1 = ec.multiply(r, m);

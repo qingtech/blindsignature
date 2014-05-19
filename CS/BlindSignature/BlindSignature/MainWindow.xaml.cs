@@ -22,7 +22,6 @@ namespace BlindSignature
     {
         //
         long hash_value = 2;
-        Point message;
         User user;
         Signer signer;
         EllipticCurve ec;
@@ -31,6 +30,8 @@ namespace BlindSignature
         //
         double scroll_viewer_position = 0;
 		int label_ecs_index = 0;
+        //
+        Color whole_background = Color.FromArgb(255,255,74,0);
         public MainWindow()
         {
             ecs = new EllipticCurve[9];
@@ -38,22 +39,24 @@ namespace BlindSignature
             {
                 ecs[i] = new EllipticCurve(i);
             }
-            user = new User(0);
-            ec = user.EC;
-            signer = user.SIGNER;
-            message = ec.multiply(this.hash_value, ec.G);
+           
             InitializeComponent();
 			label_ecs = new System.Windows.Controls.Label[9];
-			
 			for(int i=0;i<9;i++)
 			{
 				label_ecs[i] = FindName("label_ecs_"+i) as System.Windows.Controls.Label;
 				label_ecs[i].Content = ecs[i];
 			}
+            this.choose_ec(this.label_ecs_index);
             this.init();
             this.scroll_viewer_1.PreviewMouseWheel += this.scroll_viewer_1_PreviewMouseWheel;
         }
-
+        private void choose_ec(int index)
+        {
+            user = new User(index);
+            ec = user.EC;
+            signer = user.SIGNER;
+        }
         private void text_box_file_name_GotFocus(object sender, RoutedEventArgs e)
         {
             // 在此处添加事件处理程序实现。
@@ -67,7 +70,7 @@ namespace BlindSignature
             DialogResult result = openFileDialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.Cancel)
             {
-                this.text_box_file_name.Text = "";
+                this.get_message();
                 this.scroll_viewer_1.Focus();
                 return;
             }
@@ -78,6 +81,7 @@ namespace BlindSignature
         }
         private void text_box_file_name_TextChanged(object sender, TextChangedEventArgs e)
         {
+            /*
             if (this.button_blind == null) { this.init(); return; }
             string file_name = this.text_box_file_name.Text;
             if (!File.Exists(file_name)) { this.init(); return; }
@@ -86,9 +90,12 @@ namespace BlindSignature
             hash_value = file_hash.GetHashCode();
             this.ready_to_blind_message();
             this.button_blind.Focus();
+             * */
+            this.get_message();
         }
         private void text_box_message_string_TextChanged(object sender, TextChangedEventArgs e)
         {
+            /*
             string str = this.text_box_message_string.Text;
             if (str.Equals(""))
             {
@@ -98,9 +105,16 @@ namespace BlindSignature
             hash_value = str.GetHashCode();
             
             this.ready_to_blind_message();
+             */
+            this.get_message();
         }
 
         private void tab_control_1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.get_message();
+        }
+
+        private void get_message()
         {
             //this.label_inter.Content = this.tab_control_1.SelectedIndex + "";
             if (this.tab_control_1.SelectedIndex == 0) //文件
@@ -125,8 +139,8 @@ namespace BlindSignature
                 hash_value = str.GetHashCode();
                 this.ready_to_blind_message();
             }
+            this.scroll_viewer_1.ScrollToHome();
         }
-        
 
         private void scroll_viewer_1_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -154,10 +168,10 @@ namespace BlindSignature
         }
         private void scroll_viewer_offset_change(int offset)
         {
-            this.label_message_blind.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-            this.label_blind_signature.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-            this.label_deblind.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-            this.label_verify.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            this.label_message_blind.Background = new SolidColorBrush(whole_background);
+            this.label_blind_signature.Background = new SolidColorBrush(whole_background);
+            this.label_deblind.Background = new SolidColorBrush(whole_background);
+            this.label_verify.Background = new SolidColorBrush(whole_background);
             switch (offset)
             {
                 case 0:
@@ -194,13 +208,14 @@ namespace BlindSignature
 
         private void button_verify_Click(object sender, RoutedEventArgs e)
         {
-    
+            /***********************
             Point rd = ec.multiply(ec.getMulInverse(user.R,ec.ORDG), signer.D1);
             Point ss = user.EC.getInverse(user.S);
             Point mm = ec.add(rd,ss);
             this.label_user.Content = "rd:" + rd;
             this.label_inter.Content = "-S = " + ss;
             this.label_signer.Content = "mm = " + mm;
+             ***********************/
             this.label_user_mm.Content = user.MM;
             //this.label_user_mm.Content = mm;
             this.label_user_m_2.Content = user.M;
@@ -262,14 +277,16 @@ namespace BlindSignature
         {
             //
             if (hash_value < 0) hash_value = 0 - hash_value;
+            /***************
             hash_value = 100;
+             ***************/
             user.process(hash_value);
            
             //user
             //message blind
             if (this.label_user_hash_value == null) return;
             this.label_user_hash_value.Content = hash_value;
-            this.label_user_m_1.Content = "(?,?)";
+            this.label_user_m_1.Content = this.user.M;
             this.label_user_r.Content = "?";
             this.label_user_c1.Content = "(?,?)";
             this.label_user_c2.Content = "(?,?)";
@@ -488,15 +505,16 @@ namespace BlindSignature
 		{
 			if(index == this.label_ecs_index) return;
 			this.label_ecs_index = index;
+            this.choose_ec(this.label_ecs_index);
 			for(int i=0;i < this.label_ecs.Length; i++)
 			{
 				label_ecs[i].Foreground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-				label_ecs[i].Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                label_ecs[i].Background = new SolidColorBrush(whole_background);
 			}
 			label_ecs[index].Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
 			label_ecs[index].Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-			
-			this.init();
+
+            this.get_message();
 		}
 
 		private void button_exit_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -167,8 +167,8 @@ namespace BlindSignature
                 d = v - t * x;
                 v = x;
             }
-            v %= this.p;
-            if (v < 0) v = (v + this.p) % this.p;
+            v %= n;
+            if (v < 0) v = (v + n) % n;
             return v;
         }
         private char[] getBitCharArray(long l)

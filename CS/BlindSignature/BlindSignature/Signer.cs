@@ -42,10 +42,10 @@ namespace BlindSignature
             //S[i]=S[i-1]^q mod I
             s0 = random.Next((int)ec.ORD);
             i = random.Next(24);
-            //**********
+            /**********
             s0 = 100;
             i = 10;
-            //**********
+            //**********/
             long I = ec.ORDG;
             si = s0;
             BigInteger tmp_si = new BigInteger(si);
