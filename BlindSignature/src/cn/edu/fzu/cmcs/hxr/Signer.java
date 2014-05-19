@@ -32,7 +32,9 @@ public class Signer {
 		//S[i]=S[i-1]^q mod I
 		int t = (int)(ec.ord.intValue()*1.0*Math.random());
 		s0 = new BigInteger(t+"");
+		//s0 = new BigInteger("100");
 		i = (int)(24*Math.random());
+		//i = 10;
 		BigInteger I = ec.ordg;
 		si = s0;
 		for(int ii=1;ii<=i;ii++){

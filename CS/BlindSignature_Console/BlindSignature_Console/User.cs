@@ -22,16 +22,16 @@ namespace BlindSignature_Console
         public long R { get { return r; } set { r = value; } }
         public Point M { get { return m; } set { m = value; } }
         public Point MM { get { return mm; } set { mm = value; } }
+        public Signer SIGNER { get{return signer;}}
         public User(int index)
         {
             ec = new EllipticCurve(index);
             m = ec.multiply(3, ec.G);
             signer = new Signer(ec);
         }
-        public void process()
+        public void process(long hash_value)
         {
-            this.blindMessage(3);
-            signer.generatePrivateKey();
+            this.blindMessage(hash_value);
             signer.blindSignature(c1,c2);
             this.deblind();
             Boolean res = this.verify();
@@ -67,7 +67,7 @@ namespace BlindSignature_Console
         {
             // d1*r^-1 - s = m
             mm = ec.add(ec.multiply(ec.getMulInverse(r), signer.D1), ec.getInverse(s));
-            return true;
+            return mm.same(m);
         }
     }
 }

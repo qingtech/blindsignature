@@ -34,13 +34,21 @@ namespace BlindSignature_Console
                 Console.WriteLine(i + ":" + Program.modInverse(i, 17));
             }
             User user = new User(0);
-            user.process();
+            EllipticCurve ec = user.EC;
+            Point p = ec.G;
+            for (int i = 1; i < 31; i++)
+            {
+                Console.WriteLine(i+": "+ec.multiply(i,ec.G));
+                //Console.WriteLine(i + ": " + p);
+                //p = ec.add(p,ec.G);
+            }
+            user.process(1);
             string str;
             while ((str = Console.ReadLine()) != null)
             {
                 int index = Int32.Parse(str);
-                EllipticCurve ec = new EllipticCurve(index);
-                Console.WriteLine(ec);
+                EllipticCurve e = new EllipticCurve(index);
+                Console.WriteLine(e);
             }
             while (true) ;
         }

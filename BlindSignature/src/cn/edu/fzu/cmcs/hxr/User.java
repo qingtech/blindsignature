@@ -43,6 +43,7 @@ public class User {
 		BigDecimal range = new BigDecimal("1023");
 		BigDecimal random = new BigDecimal(Math.random());
 		r = range.multiply(random).toBigInteger();
+		//r = new BigInteger("100");
 //		System.out.println("range="+range);
 //		System.out.println("random="+random);
 //		System.out.println("r="+r);
@@ -65,8 +66,7 @@ public class User {
 	public boolean verify(){
 		//d1*r^-1—s = m
 		mm = ec.add(ec.multiply(r.modInverse(ec.ordg), signer.getD1()), ec.getReverse(s));
-		if(!mm.same(m)) return false;
-		return true;
+		return mm.same(m);
 	}
 	public EllipticCurve getEc() {
 		return ec;

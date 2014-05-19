@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
 import java.awt.Color;
 
 public class Main extends JFrame {
@@ -97,6 +98,10 @@ public class Main extends JFrame {
 	public static void main(String[] args) {
 		new Main();
 		// System.out.println("over!");
+		EllipticCurve ec = new EllipticCurve(0);
+		for(int i=1;i<542;i++){
+			System.out.println(i+": "+ec.multiply(new BigInteger(i+""),ec.g));
+		}
 	}
 
 	public Main() {
@@ -582,7 +587,7 @@ public class Main extends JFrame {
 		blind_button.setEnabled(true);
 		BigInteger m_hash = new BigInteger(
 				Math.abs(original_message.hashCode()) + "");
-
+		//BigInteger m_hash = new BigInteger("100");
 		hash_value_label.setText(String.format("    消息哈希值：%s", m_hash));
 
 		user.blindMessage(m_hash);
@@ -788,7 +793,14 @@ public class Main extends JFrame {
 		// 验证
 		boolean res = user.verify();
 		mm_label.setText(String.format("    D1*r^-1 - S = %s", user.getMm()));
-
+		//$$$$$$$$$$$
+//		mm_label.setText(String.format("    D1*r^-1 - S =%s*%s + %s = %s",
+//				signer.getD1(),user.getR().modInverse(user.getEc().p),
+//				user.getEc().getReverse(user.getS()),user.getMm()));
+		//System.out.println("d1:" +signer.getD1());
+		//System.out.println("D1*r^-1 = "+user.getEc().
+		//		multiply(user.getR().modInverse(user.getEc().p),signer.getD1()));
+		//$$$$$$$$$$$
 		m_label.setText(String.format("    m = %s", user.getM()));
 		result_label.setForeground(Color.red);
 		if (res) {

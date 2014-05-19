@@ -23,6 +23,7 @@ namespace BlindSignature_Console
         private Point d2 = null;
         private EllipticCurve ec = null;
         public long S0 { get { return s0; } set { s0 = value; } }
+        public long I { get { return i; } }
         public long SI { get { return si; } set { si = value; } }
         public Point RI { get { return ri; } set { ri = value; } }
         public long Q { get { return q; } set { q = value; } }
