@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
+using Microsoft.Expression.Media.Effects;
 namespace BlindSignature
 {
     /// <summary>
@@ -50,6 +52,7 @@ namespace BlindSignature
             this.choose_ec(this.label_ecs_index);
             this.init();
             this.scroll_viewer_1.PreviewMouseWheel += this.scroll_viewer_1_PreviewMouseWheel;
+            this.log("init system");
         }
         private void choose_ec(int index)
         {
@@ -111,9 +114,33 @@ namespace BlindSignature
 
         private void tab_control_1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (tab_control_1.SelectedIndex == 0)
+            {
+            }
+            else
+            {
+            }
             this.get_message();
         }
-
+        private void run_1()
+        {
+            int time = 1000;
+                int step = 20;
+                double width = 200;// this.text_box_message_string.Width;
+                double height = 100;// this.text_box_message_string.Height;
+                double w = width / step;
+                double h = width / step;
+                this.text_box_message_string.Width = 1;
+                this.text_box_message_string.Height = 1;
+                for (int i = 0; i < step; i++)
+                {
+                    this.text_box_message_string.Width += w;
+                    this.text_box_message_string.Height += h;
+                    System.Threading.Thread.Sleep(time/step);
+                }
+                this.text_box_message_string.Width = width;
+                this.text_box_message_string.Height = height;
+        }
         private void get_message()
         {
             //this.label_inter.Content = this.tab_control_1.SelectedIndex + "";
@@ -127,6 +154,7 @@ namespace BlindSignature
                 hash_value = file_hash.GetHashCode();
                 this.ready_to_blind_message();
                 this.button_blind.Focus();
+                this.log("got message");
             }
             else if (this.tab_control_1.SelectedIndex == 1) //字符串
             {
@@ -138,6 +166,7 @@ namespace BlindSignature
                 }
                 hash_value = str.GetHashCode();
                 this.ready_to_blind_message();
+                this.log("got message");
             }
             this.scroll_viewer_1.ScrollToHome();
         }
@@ -193,16 +222,19 @@ namespace BlindSignature
         }
         private void button_blind_Click(object sender, RoutedEventArgs e)
         {
+            this.log("blind message");
             this.ready_to_blind_signature();
         }
 
         private void button_blind_signature_Click(object sender, RoutedEventArgs e)
         {
+            this.log("blind signature");
             this.ready_to_deblind();
         }
 
         private void button_deblind_Click(object sender, RoutedEventArgs e)
         {
+            this.log("deblind");
             this.ready_to_verify();
         }
 
@@ -219,7 +251,17 @@ namespace BlindSignature
             this.label_user_mm.Content = user.MM;
             //this.label_user_mm.Content = mm;
             this.label_user_m_2.Content = user.M;
+            if (user.MM.same(user.M))
+            {
+                this.label_user_result.Content = "验证成功";
+            }
+            else
+            {
+                this.label_user_result.Content = "验证失败";
+            }
+            
             this.button_verify.IsEnabled = false;
+            this.log("verify");
         }
 
         public void init()
@@ -272,6 +314,7 @@ namespace BlindSignature
 			
 			//
 			this.scroll_viewer_1.ScrollToVerticalOffset(0);
+            
         }
         public void ready_to_blind_message()
         {
@@ -508,13 +551,16 @@ namespace BlindSignature
             this.choose_ec(this.label_ecs_index);
 			for(int i=0;i < this.label_ecs.Length; i++)
 			{
+				label_ecs[i].FontSize = 12;
 				label_ecs[i].Foreground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
                 label_ecs[i].Background = new SolidColorBrush(whole_background);
 			}
+			label_ecs[index].FontSize = 14;
 			label_ecs[index].Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
 			label_ecs[index].Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
 
             this.get_message();
+            this.log("choose ec");
 		}
 
 		private void button_exit_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -523,5 +569,96 @@ namespace BlindSignature
 			this.Close();
 		}
 
+		private void label_process_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			// TODO: Add event handler implementation here.
+			if(sender == this.label_message_blind)
+			{
+				this.scroll_viewer_1.ScrollToHome();
+				this.scroll_viewer_offset_change(0);
+			}
+			else if(sender == this.label_blind_signature)
+			{
+				this.scroll_viewer_1.ScrollToVerticalOffset(380);
+				this.scroll_viewer_offset_change(1);
+			}
+			else if(sender == this.label_deblind || sender == this.label_verify)
+			{
+				this.scroll_viewer_1.ScrollToBottom();
+				this.scroll_viewer_offset_change(2);
+			}
+		}
+		private void log(string str)
+		{
+            string time = DateTime.Now.ToString();
+            string s_event = "";
+			//系统初始化
+			if(str.Equals("init system"))
+			{
+                s_event = "系统初始化";
+			}
+			//选择椭圆曲线
+			else if(str.Equals("choose ec"))
+			{
+                s_event = "选择曲线：" + this.ec;
+			}
+			//得到消息
+			else if(str.Equals("got message"))
+			{
+                s_event = "得到消息：" + this.user.M;
+			}
+			//消息盲化
+            else if (str.Equals("blind message"))
+			{
+                s_event = String.Format("用户将消息M{0}盲化成C1{1},C2{2}并给签名者",user.M,user.C1,user.C2);
+			}
+			//盲签名
+			else if(str.Equals("blind signature"))
+			{
+                s_event = String.Format("签名者通过初始私钥S0={0},在时段i={1}得到私钥Si={2}\n",signer.S0,signer.I,signer.SI);
+                s_event += String.Format("签名者进行盲签名得到D1{0},D2{1},并将其等传给用户",signer.D1,signer.D2);
+			}
+			//解盲
+			else if(str.Equals("deblind"))
+			{
+                s_event = String.Format("用户得到D1,D2后，利用其进行解盲得到S{0}",user.S);
+			}
+			//验证
+			else if(str.Equals("verify"))
+			{
+                if (user.M.same(user.MM))
+                {
+                    s_event = "用户进行盲签名验证，结果成功";
+                }
+                else
+                {
+                    s_event = "用户进行盲签名验证，结果失败";
+                }
+                
+			}
+			//
+			else if(str.Equals(""))
+			{
+                s_event = "";
+			}
+            string log = String.Format("[{0}] {1}\n",time,s_event);
+            this.text_block_log.Text += log;
+			this.scroll_viewer_log.ScrollToBottom();
+		}
+		private void header_gird_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			// TODO: Add event handler implementation here.
+			base.DragMove();
+		}
+
+        private void header_gird_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            double o = this.Opacity;
+            o -= Math.Sign(e.Delta)*0.01;
+            if (o < 0) o = 0;
+            if (o > 1) o = 1;
+            this.Opacity = o;
+
+        }
     }
 }

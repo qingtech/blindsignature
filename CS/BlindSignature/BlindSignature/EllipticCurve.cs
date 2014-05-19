@@ -223,7 +223,7 @@ namespace BlindSignature
         public bool same(Point point)
         {
             if (this.E && point.E) return true;
-            return (this.X == point.Y) && (this.Y == point.Y);
+            return (this.X == point.X) && (this.Y == point.Y);
         }
     }
 }

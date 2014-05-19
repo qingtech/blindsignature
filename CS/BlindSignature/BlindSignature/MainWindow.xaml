@@ -1,8 +1,8 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="BlindSignature.MainWindow"
-        Title="盲签名演示程序" Height="500" Width="1000" Left="Auto" Top="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFFF4A00" OpacityMask="#FFCE4D4D" WindowStyle="None" AllowsTransparency="True">
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ee="http://schemas.microsoft.com/expression/2010/effects" mc:Ignorable="d" x:Class="BlindSignature.MainWindow"
+        Title="盲签名演示程序" Height="500" Width="1000" Left="Auto" Top="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFFF4A00" OpacityMask="#FFCE4D4D" Opacity="0.8" AllowsTransparency="True" WindowStyle="None">
     <Window.Resources>
         <Style x:Key="TabItemStyle">
             <Style.Triggers>
@@ -20,26 +20,29 @@
         </Style>
     </Window.Resources>
 	<Grid x:Name="grid_main" HorizontalAlignment="Left" Height="500" VerticalAlignment="Top" Width="1000">
-		<Grid Margin="95,0,0,0" Width="600" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Name="header_gird" Background="#FF333333">
-			<Label Content="用户" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" Name="label_user" />
-			<Label Content="交互过程" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" Name="label_inter" FontFamily="MingLiU" FontWeight="Normal" />
-			<Label Content="签名者" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" Name="label_signer" />
+		<Grid Margin="95,0,0,0" Width="600" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" x:Name="header_gird" Background="#FF333333" Opacity="0.9" PreviewMouseLeftButtonDown="header_gird_PreviewMouseLeftButtonDown" MouseWheel="header_gird_MouseWheel">
+			<Label Content="用户" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" x:Name="label_user" />
+			<Label Content="交互过程" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" x:Name="label_inter" FontFamily="MingLiU" FontWeight="Normal" />
+			<Label Content="签名者" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="50" Width="200" FontSize="21.333" Margin="0" Background="{x:Null}" Foreground="White" x:Name="label_signer" />
 		</Grid>
-		<Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="800" Height="380" Margin="0,50,0,-50">
-			<Label Content="消息盲化" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="95" FontSize="21.333" Margin="0,50,0,280" Background="#FF333333" Foreground="White" Name="label_message_blind" Height="50" VerticalAlignment="Top" />
-			<Label Content="盲签名" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,99.303,0,0" Background="#FFFF4A00" Foreground="White" Name="label_blind_signature" />
-			<Label Content="解盲" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,149.01,0,0" Background="#FFFF4A00" Foreground="White" Name="label_deblind" />
-			<Label Content="验证" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,199.346,0,0" Background="#FFFF4A00" Foreground="White" Name="label_verify" />
-			<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Height="380" VerticalAlignment="Top" Width="600" Margin="95,0,0,0" Background="#FF333333" Name="scroll_viewer_1">
-				<UniformGrid Rows="3" Height="1140" Width="600">
+		<Grid x:Name="grid_content" HorizontalAlignment="Left" VerticalAlignment="Top" Width="800" Height="380" Margin="0,50,0,-50" Opacity="0.8">
+			<Label Content="消息盲化" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="95" FontSize="21.333" Margin="0,50,0,280" Background="#FF333333" Foreground="White" x:Name="label_message_blind" Height="50" VerticalAlignment="Top" MouseDown="label_process_MouseDown" />
+			<Label Content="盲签名" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,99.303,0,0" Background="#FFFF4A00" Foreground="White" x:Name="label_blind_signature" MouseDown="label_process_MouseDown" />
+			<Label Content="解盲" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,149.01,0,0" Background="#FFFF4A00" Foreground="White" x:Name="label_deblind"  MouseDown="label_process_MouseDown" />
+			<Label Content="验证" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="95" FontSize="21.333" Margin="0,199.346,0,0" Background="#FFFF4A00" Foreground="White" x:Name="label_verify" MouseDown="label_process_MouseDown"  />
+			<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Height="380" VerticalAlignment="Top" Width="600" Margin="95,0,0,0" Background="#FF333333" x:Name="scroll_viewer_1">
+				<UniformGrid x:Name="uniform_gird_four_processes" Rows="3" Height="1140" Width="600">
 					<UniformGrid Columns="3" Rows="1" HorizontalAlignment="Left" Height="380" VerticalAlignment="Top" Width="600" Margin="0" Background="#FF333333" x:Name="uniform_grid_message_blind">
 						<Grid Width="200" Height="380">
 							<TabControl HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="200" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,10,0,-10" x:Name="tab_control_1" SelectionChanged="tab_control_1_SelectionChanged">
+								<TabControl.Effect>
+									<ee:SharpenEffect/>
+								</TabControl.Effect>
 								<TabItem Header="文件" Margin="3,6,-3,-6" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Bottom">
 									<TextBox TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.493,0.993" Margin="0" BorderBrush="{x:Null}"  x:Name="text_box_file_name" GotFocus="text_box_file_name_GotFocus" TextChanged="text_box_file_name_TextChanged" Height="Auto" />
 								</TabItem>
 								<TabItem Margin="0,6,-3,-6" Header="字符串" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" Width="50">
-									<TextBox TextWrapping="Wrap" Text="" BorderBrush="{x:Null}" x:Name="text_box_message_string" TextChanged="text_box_message_string_TextChanged" />
+									<TextBox TextWrapping="Wrap" Text="" BorderBrush="{x:Null}" x:Name="text_box_message_string" TextChanged="text_box_message_string_TextChanged" Width="200" Height="100" />
 								</TabItem>
 							</TabControl>
 							<Label Content="消息哈希值：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="9,151.167,0,0" Background="{x:Null}" Foreground="White"/>
@@ -52,7 +55,11 @@
 							<Label x:Name="label_user_c1" Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="101" Margin="89,231.873,0,0" Background="{x:Null}" Foreground="White"/>
 							<Label Content="C2 = rG +m :" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="5,262.54,0,0" Background="{x:Null}" Foreground="White"/>
 							<Label x:Name="label_user_c2" Content="(45,56)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="103" Margin="87,262.54,0,0" Background="{x:Null}" Foreground="White"/>
-							<Button Content="盲化并发送" HorizontalAlignment="Left" VerticalAlignment="Top" Width="81" Margin="43,315.873,0,0" x:Name="button_blind" Background="{x:Null}" Foreground="White" Click="button_blind_Click" />
+							<Button Content="盲化并发送" HorizontalAlignment="Left" VerticalAlignment="Top" Width="81" Margin="43,315.873,0,0" x:Name="button_blind" Background="{x:Null}" Foreground="White" Click="button_blind_Click" >
+								<Button.Effect>
+									<ee:SharpenEffect/>
+								</Button.Effect>
+							</Button>
 						</Grid>
 						<Grid Width="200" Height="380" Margin="0">
 							<Label Content="C1 " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="27" Margin="48,230,0,0" Background="{x:Null}" Foreground="White"/>
@@ -116,7 +123,7 @@
 							<Label Content="m = " HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="47.75" FontSize="13.333" Margin="53.574,222.982,0,0" Background="{x:Null}" Foreground="White"/>
 							<Label x:Name="label_user_m_2" Content="(34,45)" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="92.676" Margin="97.324,222.982,0,0" Background="{x:Null}" Foreground="White"/>
 							<Label Content="签名结果：" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="86" Margin="50.333,250.942,0,0" Background="{x:Null}" Foreground="White"/>
-							<Label Content="未知" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="47.75" Margin="119.333,250.942,0,0" Background="{x:Null}" Foreground="White"/>
+							<Label Content="未知" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27.96" Width="60" Margin="119.333,250.942,0,0" Background="{x:Null}" Foreground="White" x:Name="label_user_result" />
 							<Button x:Name="button_verify" Content="验证" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="62.25,293.03,0,0" Background="{x:Null}" Foreground="White" Click="button_verify_Click" />
 						</Grid>
 						<Grid Height="380"  Width="200" />
@@ -126,7 +133,7 @@
 			</ScrollViewer>
 		</Grid>
 		<UniformGrid x:Name="uniform_gird_left" HorizontalAlignment="Right" VerticalAlignment="Top" Width="305" Columns="1">
-			<Label x:Name="label_ecs_0" Content="" Background="Black" Height="30" Foreground="White" MouseDown="label_ecs_MouseDown" MouseWheel="label_ecs_MouseWheel"/>
+			<Label x:Name="label_ecs_0" Content="" Background="Black" Height="30" Foreground="White" MouseDown="label_ecs_MouseDown" MouseWheel="label_ecs_MouseWheel" FontSize="14.667"/>
 			<Label x:Name="label_ecs_1" Content="" Background="{x:Null}" Height="30" MouseDown="label_ecs_MouseDown" MouseWheel="label_ecs_MouseWheel" Foreground="#FFC8C8C8"/>
 			<Label x:Name="label_ecs_2" Content="" Background="{x:Null}" Height="30" MouseDown="label_ecs_MouseDown" MouseWheel="label_ecs_MouseWheel" Foreground="#FFC8C8C8"/>
 			<Label x:Name="label_ecs_3" Content="" Background="{x:Null}" Height="30" MouseDown="label_ecs_MouseDown" MouseWheel="label_ecs_MouseWheel" Foreground="#FFC8C8C8"/>
@@ -137,6 +144,11 @@
 			<Label x:Name="label_ecs_8" Content="" Background="{x:Null}" Height="30" MouseDown="label_ecs_MouseDown" MouseWheel="label_ecs_MouseWheel" Foreground="#FFC8C8C8"/>
 		</UniformGrid>
 		<Button x:Name="button_exit" Content="退出" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Background="#FF333333" Foreground="White" PreviewMouseLeftButtonUp="button_exit_PreviewMouseLeftButtonUp"/>
+		<Grid x:Name="grid_log" HorizontalAlignment="Right" Height="230" VerticalAlignment="Bottom" Width="305">
+			<ScrollViewer x:Name="scroll_viewer_log" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Height="230" Width="305">
+				<TextBlock TextWrapping="Wrap" Foreground="White" Background="#FF333333" x:Name="text_block_log" Width="305" />
+			</ScrollViewer>
+		</Grid>
 	</Grid>
 </Window>
     
