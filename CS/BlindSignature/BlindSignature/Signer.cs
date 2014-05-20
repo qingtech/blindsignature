@@ -41,7 +41,8 @@ namespace BlindSignature
             Random random = new Random();
             //S[i]=S[i-1]^q mod I
             s0 = random.Next((int)ec.ORD);
-            i = random.Next(24);
+            i = DateTime.Now.Hour;
+            if (i == 0) i = 24;
             /**********
             s0 = 100;
             i = 10;

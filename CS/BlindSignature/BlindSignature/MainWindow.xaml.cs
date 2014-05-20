@@ -114,33 +114,50 @@ namespace BlindSignature
 
         private void tab_control_1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (tab_control_1.SelectedIndex == 0)
+            if (tab_control_1.SelectedIndex == 0)//文件
             {
+                this.show_text_box(this.text_box_file_name);
             }
-            else
+            else//字符串
             {
+                this.show_text_box(this.text_box_message_string);
             }
             this.get_message();
         }
-        private void run_1()
+        private void show_text_box(System.Windows.Controls.TextBox text_box)
         {
-            int time = 1000;
-                int step = 20;
-                double width = 200;// this.text_box_message_string.Width;
-                double height = 100;// this.text_box_message_string.Height;
+            double width = text_box.Width;
+            double height = text_box.Height;
+            text_box.Width = 1;
+            text_box.Height = 1;
+            /////////////////////////////////
+            Thread anotherThread = new Thread(() =>
+            {
+                int time = 700;
+                int step = 50;
                 double w = width / step;
-                double h = width / step;
-                this.text_box_message_string.Width = 1;
-                this.text_box_message_string.Height = 1;
+                double h = height / step;
                 for (int i = 0; i < step; i++)
                 {
-                    this.text_box_message_string.Width += w;
-                    this.text_box_message_string.Height += h;
-                    System.Threading.Thread.Sleep(time/step);
+                    //异步
+                    text_box.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        text_box.Width = w * (i + 1);
+                        text_box.Height = h * (i + 1);
+                        if (i + 1 >= step)
+                        {
+                            text_box.Width = width;
+                            text_box.Height = height;
+                        }
+                    }));
+                    System.Threading.Thread.Sleep(time / step);
                 }
-                this.text_box_message_string.Width = width;
-                this.text_box_message_string.Height = height;
+            });
+            anotherThread.SetApartmentState(ApartmentState.STA);
+            anotherThread.Start();
+            /////////////////////////////////
         }
+       
         private void get_message()
         {
             //this.label_inter.Content = this.tab_control_1.SelectedIndex + "";
@@ -176,32 +193,32 @@ namespace BlindSignature
             // 在此处添加事件处理程序实现。
 
             this.scroll_viewer_position -= Math.Sign(e.Delta);
-            int offset = -1;
+            int page = -1;
             if (this.scroll_viewer_position > 1)
             {
-                offset = (int)this.scroll_viewer_1.ContentVerticalOffset / 380 + 1;
-                if (offset > 2) offset = 2;
-                this.scroll_viewer_1.ScrollToVerticalOffset(offset*380);
+                page = (int)this.scroll_viewer_1.ContentVerticalOffset / 380 + 1;
+                if (page > 2) page = 2;
+                this.scroll_viewer_1.ScrollToVerticalOffset(page*380);
                 this.scroll_viewer_position = 0;
             }
             else if (this.scroll_viewer_position < -1)
             {
-                offset = (int)this.scroll_viewer_1.ContentVerticalOffset / 380;
-                if (offset < 0) offset = 0;
-                this.scroll_viewer_1.ScrollToVerticalOffset(offset * 380);
+                page = (int)this.scroll_viewer_1.ContentVerticalOffset / 380;
+                if (page < 0) page = 0;
+                this.scroll_viewer_1.ScrollToVerticalOffset(page * 380);
                 this.scroll_viewer_position = 0;
             }
-            if (offset == -1) return;
-            this.scroll_viewer_offset_change(offset);
+            if (page == -1) return;
+            this.scroll_viewer_page_change(page);
             
         }
-        private void scroll_viewer_offset_change(int offset)
+        private void scroll_viewer_page_change(int page)
         {
             this.label_message_blind.Background = new SolidColorBrush(whole_background);
             this.label_blind_signature.Background = new SolidColorBrush(whole_background);
             this.label_deblind.Background = new SolidColorBrush(whole_background);
             this.label_verify.Background = new SolidColorBrush(whole_background);
-            switch (offset)
+            switch (page)
             {
                 case 0:
                     this.label_message_blind.Background = new SolidColorBrush(Color.FromArgb(255, 51, 51, 51));
@@ -224,17 +241,143 @@ namespace BlindSignature
         {
             this.log("blind message");
             this.ready_to_blind_signature();
+            Thread anotherThread = new Thread(() =>
+            {
+                int time = 2000;
+                int step = 5;
+                for (int i = 0; i < step; i++)
+                {
+                    //异步
+                    this.uniform_grid_message_blind.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (i % 2 == 0)
+                        {
+                            this.grid_2.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            this.grid_2.Visibility = Visibility.Hidden;
+                        }
+                        if (i + 1 >= step) this.grid_2.Visibility = Visibility.Visible;
+                    }));
+                    System.Threading.Thread.Sleep(time / step);
+                }
+                time = 1500;
+                step = 4;
+                for (int i = 0; i < step; i++)
+                {
+                    //异步
+                    this.uniform_grid_message_blind.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (i % 2 == 0)
+                        {
+                            this.grid_3.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            this.grid_3.Visibility = Visibility.Hidden;
+                        }
+                        if (i + 1 >= step)
+                        {
+                            this.grid_3.Visibility = Visibility.Visible;
+                            System.Threading.Thread.Sleep(2000);
+                            this.scroll_viewer_1_scroll_to_page_n(1);
+                            this.scroll_viewer_page_change(1);
+                        }
+                    }));
+                    System.Threading.Thread.Sleep(time / step);
+                }
+            });
+            anotherThread.SetApartmentState(ApartmentState.STA);
+            anotherThread.Start();
+            /////////////////////////////////
         }
 
         private void button_blind_signature_Click(object sender, RoutedEventArgs e)
         {
             this.log("blind signature");
             this.ready_to_deblind();
+            Thread anotherThread = new Thread(() =>
+            {
+                int time = 2000;
+                int step = 5;
+                for (int i = 0; i < step; i++)
+                {
+                    //异步
+                    this.uniform_grid_message_blind.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (i % 2 == 0)
+                        {
+                            this.grid_5.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            this.grid_5.Visibility = Visibility.Hidden;
+                        }
+                        if (i + 1 >= step) this.grid_5.Visibility = Visibility.Visible;
+                    }));
+                    System.Threading.Thread.Sleep(time / step);
+                }
+                time = 1500;
+                step = 4;
+                for (int i = 0; i < step; i++)
+                {
+                    //异步
+                    this.uniform_grid_message_blind.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (i % 2 == 0)
+                        {
+                            this.grid_4.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            this.grid_4.Visibility = Visibility.Hidden;
+                        }
+                        if (i + 1 >= step)
+                        {
+                            this.grid_4.Visibility = Visibility.Visible;
+                            System.Threading.Thread.Sleep(2000);
+                            this.scroll_viewer_1_scroll_to_page_n(2);
+                            this.scroll_viewer_page_change(2);
+                            
+                        }
+                    }));
+                    System.Threading.Thread.Sleep(time / step);
+                }
+            });
+            anotherThread.SetApartmentState(ApartmentState.STA);
+            anotherThread.Start();
+            /////////////////////////////////
         }
 
         private void button_deblind_Click(object sender, RoutedEventArgs e)
         {
             this.log("deblind");
+            Thread anotherThread = new Thread(() =>
+            {
+                int time = 2000;
+                int step = 5;
+                for (int i = 0; i < step; i++)
+                {
+                    //异步
+                    this.uniform_grid_message_blind.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (i % 2 == 0)
+                        {
+                            this.label_user_s.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            this.label_user_s.Visibility = Visibility.Hidden;
+                        }
+                        if (i + 1 >= step) this.label_user_s.Visibility = Visibility.Visible;
+                    }));
+                    System.Threading.Thread.Sleep(time / step);
+                }
+            });
+            anotherThread.SetApartmentState(ApartmentState.STA);
+            anotherThread.Start();
+            /////////////////////////////////
             this.ready_to_verify();
         }
 
@@ -259,11 +402,63 @@ namespace BlindSignature
             {
                 this.label_user_result.Content = "验证失败";
             }
-            
+            this.label_user_result.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+            Thread anotherThread = new Thread(() =>
+            {
+                int time = 2000;
+                int step = 5;
+                for (int i = 0; i < step; i++)
+                {
+                    //异步
+                    this.uniform_grid_message_blind.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (i % 2 == 0)
+                        {
+                            this.label_user_result.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            this.label_user_result.Visibility = Visibility.Hidden;
+                        }
+                        if (i + 1 >= step) this.label_user_result.Visibility = Visibility.Visible;
+                    }));
+                    System.Threading.Thread.Sleep(time / step);
+                }
+            });
+            anotherThread.SetApartmentState(ApartmentState.STA);
+            anotherThread.Start();
+            /////////////////////////////////
             this.button_verify.IsEnabled = false;
             this.log("verify");
         }
-
+        private void scroll_viewer_1_scroll_to_page_n(int n)
+        {
+            /////////////////////////////////
+            Thread anotherThread = new Thread(() =>
+            {
+                int time = 4000;
+                int step = 40;
+                double init_offset = this.scroll_viewer_1.VerticalOffset;
+                double offset = 380 * n - init_offset;
+                for (int i = 0; i < step; i++)
+                {
+                    //异步
+                    this.scroll_viewer_1.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        this.scroll_viewer_1.ScrollToVerticalOffset(init_offset + offset / step * i);
+                        if (i + 1 >= step)
+                        {
+                            this.scroll_viewer_1.ScrollToVerticalOffset(n * 380);
+                            this.scroll_viewer_page_change(n);
+                        }
+                    }));
+                    Thread.Sleep(time / step);
+                }
+            });
+            anotherThread.SetApartmentState(ApartmentState.STA);
+            anotherThread.Start();
+            /////////////////////////////////
+        }
         public void init()
         {
             //user
@@ -276,6 +471,7 @@ namespace BlindSignature
             this.label_user_c2.Content = "(?,?)";
             this.button_blind.IsEnabled = false;
             //blind signature
+            this.grid_4.Visibility = Visibility.Hidden;
             this.label_user_i.Content = "?";
             this.label_user_ri.Content = "(?,?)";
             this.label_user_d1.Content = "(?,?)";
@@ -284,14 +480,18 @@ namespace BlindSignature
             this.label_user_s.Content = "(?,?)";
             this.label_user_mm.Content = "(?,?)";
             this.label_user_m_2.Content = "(?,?)";
+            this.label_user_result.Content = "未知";
+            this.label_user_result.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
             this.button_deblind.IsEnabled = false;
             this.button_verify.IsEnabled = false;
 
             //inter
             //message blind
+            this.grid_2.Visibility = Visibility.Hidden;
             this.label_inter_c1.Content = "(?,?)";
             this.label_inter_c2.Content = "(?,?)";
             //blind signature
+            this.grid_5.Visibility = Visibility.Hidden;
             this.label_inter_i.Content = "?";
             this.label_inter_ri.Content = "(?,?)";
             this.label_inter_d1.Content = "(?,?)";
@@ -300,6 +500,7 @@ namespace BlindSignature
 
             //signer
             //message blind
+            this.grid_3.Visibility = Visibility.Hidden;
             this.label_signer_c1.Content = "(?,?)";
             this.label_signer_c2.Content = "(?,?)";
             //blind signature
@@ -316,6 +517,7 @@ namespace BlindSignature
 			this.scroll_viewer_1.ScrollToVerticalOffset(0);
             
         }
+        
         public void ready_to_blind_message()
         {
             //
@@ -335,6 +537,7 @@ namespace BlindSignature
             this.label_user_c2.Content = "(?,?)";
             this.button_blind.IsEnabled = true;
             //blind signature
+            this.grid_4.Visibility = Visibility.Hidden;
             this.label_user_i.Content = "?";
             this.label_user_ri.Content = "(?,?)";
             this.label_user_d1.Content = "(?,?)";
@@ -343,14 +546,18 @@ namespace BlindSignature
             this.label_user_s.Content = "(?,?)";
             this.label_user_mm.Content = "(?,?)";
             this.label_user_m_2.Content = "(?,?)";
+            this.label_user_result.Content = "未知";
+            this.label_user_result.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
             this.button_deblind.IsEnabled = false;
             this.button_verify.IsEnabled = false;
 
             //inter
             //message blind
+            this.grid_2.Visibility = Visibility.Hidden;
             this.label_inter_c1.Content = "(?,?)";
             this.label_inter_c2.Content = "(?,?)";
             //blind signature
+            this.grid_5.Visibility = Visibility.Hidden;
             this.label_inter_i.Content = "?";
             this.label_inter_ri.Content = "(?,?)";
             this.label_inter_d1.Content = "(?,?)";
@@ -359,6 +566,7 @@ namespace BlindSignature
 
             //signer
             //message blind
+            this.grid_3.Visibility = Visibility.Hidden;
             this.label_signer_c1.Content = "(?,?)";
             this.label_signer_c2.Content = "(?,?)";
             //blind signature
@@ -392,6 +600,8 @@ namespace BlindSignature
             this.label_user_s.Content = "(?,?)";
             this.label_user_mm.Content = "(?,?)";
             this.label_user_m_2.Content = "(?,?)";
+            this.label_user_result.Content = "未知";
+            this.label_user_result.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
             this.button_deblind.IsEnabled = false;
             this.button_verify.IsEnabled = false;
 
@@ -418,9 +628,10 @@ namespace BlindSignature
             this.label_signer_d1.Content = "(?,?)";
             this.label_signer_d2.Content = "(?,?)";
             this.button_blind_signature.IsEnabled = true;
-            this.scroll_viewer_1.ScrollToVerticalOffset(1*380);
-            this.scroll_viewer_offset_change(1);
-            this.button_blind_signature.Focus();
+            //this.scroll_viewer_1.ScrollToVerticalOffset(1*380);
+            //this.scroll_viewer_1.PageDown();
+            //this.scroll_viewer_offset_change(1);
+            //this.button_blind_signature.Focus();
             //deblind & verify
         }
         public void ready_to_deblind()
@@ -442,10 +653,10 @@ namespace BlindSignature
             this.label_user_s.Content = "(?,?)";
             this.label_user_mm.Content = "(?,?)";
             this.label_user_m_2.Content = "(?,?)";
+            this.label_user_result.Content = "未知";
+            this.label_user_result.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
             this.button_deblind.IsEnabled = true;
-            this.scroll_viewer_1.ScrollToVerticalOffset(2 * 380);
-            this.scroll_viewer_offset_change(2);
-            this.button_deblind.Focus();
+            //this.button_deblind.Focus();
             this.button_verify.IsEnabled = false;
 
             //inter
@@ -453,7 +664,7 @@ namespace BlindSignature
             this.label_inter_c1.Content = user.C1;
             this.label_inter_c2.Content = user.C2;
             //blind signature
-            this.label_inter_i.Content = signer.RI;
+            this.label_inter_i.Content = signer.I;
             this.label_inter_ri.Content = signer.RI;
             this.label_inter_d1.Content = signer.D1;
             this.label_inter_d2.Content = signer.D2;
@@ -472,6 +683,10 @@ namespace BlindSignature
             this.label_signer_d2.Content = signer.D2;
             this.button_blind_signature.IsEnabled = false;
             //deblind & verify
+            //this.scroll_viewer_1.ScrollToVerticalOffset(2 * 380);
+            //this.scroll_viewer_1.PageDown();
+            //this.scroll_viewer_1_page_down();
+            //this.scroll_viewer_offset_change(2);
         }
         public void ready_to_verify()
         {
@@ -491,6 +706,8 @@ namespace BlindSignature
             this.label_user_s.Content = user.S;
             this.label_user_mm.Content = "(?,?)";
             this.label_user_m_2.Content = "(?,?)";
+            this.label_user_result.Content = "未知";
+            this.label_user_result.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
             this.button_deblind.IsEnabled = false;
             this.button_verify.IsEnabled = true;
             this.button_verify.Focus();
@@ -575,17 +792,17 @@ namespace BlindSignature
 			if(sender == this.label_message_blind)
 			{
 				this.scroll_viewer_1.ScrollToHome();
-				this.scroll_viewer_offset_change(0);
+				this.scroll_viewer_page_change(0);
 			}
 			else if(sender == this.label_blind_signature)
 			{
 				this.scroll_viewer_1.ScrollToVerticalOffset(380);
-				this.scroll_viewer_offset_change(1);
+				this.scroll_viewer_page_change(1);
 			}
 			else if(sender == this.label_deblind || sender == this.label_verify)
 			{
 				this.scroll_viewer_1.ScrollToBottom();
-				this.scroll_viewer_offset_change(2);
+				this.scroll_viewer_page_change(2);
 			}
 		}
 		private void log(string str)
@@ -660,5 +877,6 @@ namespace BlindSignature
             this.Opacity = o;
 
         }
+
     }
 }
